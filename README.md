@@ -9,6 +9,7 @@ Rhodes Database aims to avoid JavaScript anywhere possible. Core features (liste
 The core features are:
 - Operator information
 - Depot
+- Enemies archive
 
 Side features that may have JavaScript:
 - Planner

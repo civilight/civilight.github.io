@@ -1,14 +1,6 @@
 {
 	"name": "app",
 	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "vite preview",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
-	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
 		"@sveltejs/adapter-static": "^3.0.2",
@@ -23,8 +15,16 @@
 		"typescript": "^5.5.3",
 		"vite": "^5.3.4"
 	},
-	"type": "module",
+	"private": true,
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+	},
 	"trustedDependencies": [
 		"@biomejs/biome"
-	]
+	],
+	"type": "module"
 }
