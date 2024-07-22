@@ -4,3 +4,11 @@ export type RegionalStrings = {
 	JP?: string
 	KR?: string
 }
+
+export type GHTrees = {
+	tree: {
+		path: string
+		sha: string
+		url: string
+	}[]
+}

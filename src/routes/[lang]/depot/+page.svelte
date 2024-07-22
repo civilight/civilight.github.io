@@ -28,10 +28,13 @@
         <a
             href="{base}/{data.lang}/depot/{itemId}"
             class="hover:scale-110"
-            title={GetRegionalString(item.name)}
+            title={GetRegionalString(item.name, data.lang)}
         >
             <div class="aspect-square">
-                <ItemIcon {url} name={GetRegionalString(item.name)} />
+                <ItemIcon
+                    {url}
+                    name={GetRegionalString(item.name, data.lang)}
+                />
             </div>
         </a>
     {/each}
