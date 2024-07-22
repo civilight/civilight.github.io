@@ -1,12 +1,7 @@
 import type { RegionalStrings } from "$lib/types"
 
-import { get } from "svelte/store"
-import { page } from "$app/stores"
-
-export function GetRegionalString(strings: RegionalStrings): string {
-	const pageLang = get(page).params.lang
-
-	switch (pageLang) {
+export function GetRegionalString(strings: RegionalStrings, lang: string = "cn"): string {
+	switch (lang) {
 		case "en":
 			return strings.GL || strings.CN
 		case "jp":
