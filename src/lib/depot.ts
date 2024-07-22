@@ -1,8 +1,8 @@
 import * as fs from "node:fs/promises"
 
-import { ASSETS_BRANCH, ASSETS_REPO, GAMEDATA_PATH } from "$src/lib/constants"
+import { ASSETS_BRANCH, ASSETS_REPO, GAMEDATA_PATH } from "$lib/constants"
 
-import type { RegionalStrings } from "$src/lib/types"
+import type { RegionalStrings } from "$lib/types"
 import { error } from "@sveltejs/kit"
 
 type ItemTable = {
@@ -18,7 +18,7 @@ type ItemTable = {
 	}
 }
 
-type Response = {
+type DepotResponse = {
 	itemTable: ItemTable
 	availableIcons: string[]
 }
@@ -31,9 +31,9 @@ type GHTrees = {
 	}[]
 }
 
-let _cached: Response
+let _cached: DepotResponse
 
-export async function ParseData(): Promise<Response> {
+export async function ParseData(): Promise<DepotResponse> {
 	if (_cached !== undefined) {
 		return _cached
 	}
@@ -55,7 +55,7 @@ export async function ParseData(): Promise<Response> {
 	const itemsTree = (await (await fetch(items.url)).json()) as GHTrees
 
 	// construct response
-	const response = {} as Response
+	const response = {} as DepotResponse
 
 	response.itemTable = itemTable
 	response.availableIcons = Object.values(itemTable)
