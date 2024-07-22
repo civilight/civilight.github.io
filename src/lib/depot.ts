@@ -31,7 +31,13 @@ type GHTrees = {
 	}[]
 }
 
+let _cached: Response
+
 export async function ParseData(): Promise<Response> {
+	if (_cached !== undefined) {
+		return _cached
+	}
+
 	const contents = await fs.readFile(`${GAMEDATA_PATH}/item_table.json`)
 	const itemTable = JSON.parse(contents.toString()) as ItemTable
 
@@ -57,6 +63,8 @@ export async function ParseData(): Promise<Response> {
 			return itemsTree.tree.find((predicate) => predicate.path === `${item.iconId}.png`)
 		})
 		.map((thing) => thing.iconId)
+
+	_cached = response
 
 	return response
 }

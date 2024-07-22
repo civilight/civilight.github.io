@@ -5,6 +5,7 @@
     import ItemIcon from "$src/components/ItemIcon.svelte"
 
     const { data } = $props()
+
     const iconUrl = data.hasIcon
         ? `${IMAGE_CDN}${ASSETS_BASE}/items/${data.itemData.iconId}.png`
         : "/missing.png"
