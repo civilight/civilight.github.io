@@ -1,9 +1,9 @@
-import { ParseData } from "$lib/depot.js"
+import { GetDepotData } from "$lib/depot"
 import { GetRegionalString } from "$lib/utils.js"
 
 import { SERVERS } from "$lib/constants.js"
 
-const ItemData = await ParseData()
+const ItemData = await GetDepotData()
 
 export async function load({ params, parent }) {
 	console.log(`[Depot] Building ${params.itemId}`)

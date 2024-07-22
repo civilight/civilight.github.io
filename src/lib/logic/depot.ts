@@ -2,7 +2,7 @@ import * as fs from "node:fs/promises"
 
 import { ASSETS_BRANCH, ASSETS_REPO, GAMEDATA_PATH } from "$lib/constants"
 
-import type { RegionalStrings } from "$lib/types"
+import type { RegionalStrings, GHTrees } from "$lib/types"
 import { error } from "@sveltejs/kit"
 
 type ItemTable = {
@@ -23,17 +23,9 @@ type DepotResponse = {
 	availableIcons: string[]
 }
 
-type GHTrees = {
-	tree: {
-		path: string
-		sha: string
-		url: string
-	}[]
-}
-
 let _cached: DepotResponse
 
-export async function ParseData(): Promise<DepotResponse> {
+export async function GetDepotData(): Promise<DepotResponse> {
 	if (_cached !== undefined) {
 		return _cached
 	}

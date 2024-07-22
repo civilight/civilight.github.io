@@ -1,4 +1,4 @@
-import { SERVERS } from "$lib/constants.js"
+import { SERVERS } from "$lib/constants"
 
 export function entries() {
 	return SERVERS.map((v) => {

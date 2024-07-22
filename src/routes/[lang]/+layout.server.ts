@@ -1,4 +1,4 @@
-import { ParseLocalization } from "$lib/localization"
+import { ParseLocalization } from "$lib/logic/localization"
 
 const Localizations = await ParseLocalization()
 
