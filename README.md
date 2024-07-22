@@ -6,6 +6,8 @@ Rhodes Database is a collection of tools for [Arknights](https://arknights.globa
 # Minimal JavaScript
 Rhodes Database aims to avoid JavaScript anywhere possible. Core features (listed below) are guaranteed to have 0 JavaScript delivered to your browser when they are loaded. This provides an extremely lightweight, fast and smooth experience.
 
+As a bonus, these core features function perfectly fine offline!
+
 The core features are:
 - Operator information
 - Depot
