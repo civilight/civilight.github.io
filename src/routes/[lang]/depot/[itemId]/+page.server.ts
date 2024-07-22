@@ -1,4 +1,6 @@
 import { ParseData } from "$lib/depot.js"
+import { GetRegionalString } from "$lib/utils.js"
+
 import { SERVERS } from "$lib/constants.js"
 
 const ItemData = await ParseData()
@@ -9,7 +11,13 @@ export async function load({ params, parent }) {
 	const item = ItemData.itemTable[params.itemId]
 
 	return {
-		itemData: item,
+		name: GetRegionalString(item.name, params.lang),
+		description: GetRegionalString(item.description, params.lang),
+		usage: GetRegionalString(item.usage, params.lang),
+
+		itemId: item.itemId,
+		iconId: item.iconId,
+
 		hasIcon: ItemData.availableIcons.includes(item.iconId),
 	}
 }
