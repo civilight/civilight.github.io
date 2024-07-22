@@ -1,13 +1,11 @@
-import { GetDepotData } from "$lib/depot"
-import { GetRegionalString } from "$lib/utils.js"
+import { GetDepotData } from "$lib/logic/depot"
+import { GetRegionalString } from "$lib/utils"
 
-import { SERVERS } from "$lib/constants.js"
+import { SERVERS } from "$lib/constants"
 
 const ItemData = await GetDepotData()
 
 export async function load({ params, parent }) {
-	console.log(`[Depot] Building ${params.itemId}`)
-
 	const item = ItemData.itemTable[params.itemId]
 
 	return {
