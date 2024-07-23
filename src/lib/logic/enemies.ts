@@ -8,24 +8,29 @@ import { error } from "@sveltejs/kit"
 type EnemiesTable = {
 	[enemyId: string]: {
 		enemyId: string
+		name: RegionalStrings
+		description: RegionalStrings
+		enemyTypes: string[]
 
 		appearsInHandbook: boolean
-		handbookExclusiveData: {
-			code: string
-			sortId: number
-			abilities: {
-				text: RegionalStrings
-				textFormat: string
-			}[]
-			description: RegionalStrings
-		}
-
-		name: RegionalStrings
+		code: string
+		sortId: number
+		abilities: {
+			text: RegionalStrings
+			textFormat: string
+		}[]
 	}
+}
+
+type EnemyType = {
+	id: string
+	raceName: RegionalStrings
+	sortId: number
 }
 
 type EnemiesResponse = {
 	enemies: EnemiesTable
+	enemyTypes: EnemyType[]
 	availableIcons: string[]
 }
 
@@ -61,6 +66,9 @@ export async function GetEnemiesData(): Promise<EnemiesResponse> {
 			return enemiesTree.tree.find((predicate) => predicate.path === `${item.enemyId}.png`)
 		})
 		.map((thing) => thing.enemyId)
+
+	const contents2 = await fs.readFile(`${GAMEDATA_PATH}/enemy_types_table.json`)
+	response.enemyTypes = JSON.parse(contents2.toString())
 
 	_cached = response
 
