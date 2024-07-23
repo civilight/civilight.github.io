@@ -9,10 +9,10 @@
     const { data } = $props()
 
     const displayedEnemies = Object.values(data.enemies)
-        .filter((v) => v.appearsInHandbook)
+        //.filter((v) => v.appearsInHandbook)
         .toSorted(
             (a, b) =>
-                a.handbookExclusiveData.sortId - b.handbookExclusiveData.sortId,
+                a.sortId - b.sortId,
         )
 </script>
 
@@ -36,7 +36,7 @@
             <div
                 class="min-w-[30%] text-center absolute right-0 bg-black p-1"
             >
-                <p>{enemy.handbookExclusiveData.code}</p>
+                <p>{enemy.code}</p>
             </div>
 
             <div class="aspect-square">
