@@ -8,6 +8,6 @@ export const ASSETS_BASE = `https://raw.githubusercontent.com/${ASSETS_REPO}/${A
 // We don't link directly to GitHub because GitHub doesn't have cache controls like
 // an actual CDN, so we proxy GitHub images through a CDN instead
 // If you want to disable proxying, just leave this blank
-export const IMAGE_CDN = ""
+export const IMAGE_CDN = "https://wsrv.nl/?url="
 
 export const SERVERS = ["en", "cn", "jp", "kr"]

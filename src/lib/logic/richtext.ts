@@ -7,6 +7,17 @@ type RichtextNode = {
 	formatters: string[]
 }
 
+export function EscapeNonHTMLRichtext(text: string): string {
+	const matches = [...text.matchAll(UltimateRegex)]
+	let cleanedText = text
+
+	for (const match of matches) {
+		cleanedText = cleanedText.replace(`<${match[0]}>`, `&lt;${match[0]}&gt;`)
+	}
+
+	return cleanedText
+}
+
 export function ParseRichtextToNodes(text: string): RichtextNode[] {
 	const parser = new XMLParser({
 		preserveOrder: true,
@@ -16,15 +27,8 @@ export function ParseRichtextToNodes(text: string): RichtextNode[] {
 		parseTagValue: false,
 	})
 
-	const matches = [...text.matchAll(UltimateRegex)]
 	const nodes: RichtextNode[] = []
-
-	let cleanedText = text
-	for (const match of matches) {
-		cleanedText = cleanedText.replace(`<${match[0]}>`, `&lt;${match[0]}&gt;`)
-	}
-
-	const obj = parser.parse(`<root>${cleanedText}</root>`)
+	const obj = parser.parse(`<root>${EscapeNonHTMLRichtext(text)}</root>`)
 
 	// biome-ignore lint/suspicious/noExplicitAny: too lazy to type lol
 	function parseNode(root: any, parentNodeData: RichtextNode | undefined) {

@@ -1,5 +1,8 @@
 <script lang="ts">
-    import { ParseRichtextToNodes } from "$lib/logic/richtext"
+    import {
+        EscapeNonHTMLRichtext,
+        ParseRichtextToNodes,
+    } from "$lib/logic/richtext"
 
     // importing a type from server is fine i suppose
     import type { LocalizedRichtextData } from "$lib/server/richtext"
@@ -61,7 +64,7 @@
 <div>
     {#each nodes as node}
         <span class={node.class} title={node.title} style={node.style}
-            >{@html node.text}</span
+            >{@html EscapeNonHTMLRichtext(node.text)}</span
         >
     {/each}
 </div>
