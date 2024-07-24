@@ -14,7 +14,7 @@
 </script>
 
 <svelte:head>
-    <title>Depot</title>
+    <title>{data.strings.depot}</title>
 </svelte:head>
 
 <main

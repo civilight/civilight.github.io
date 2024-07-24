@@ -1,12 +1,10 @@
-import { GetDepotData } from "$lib/logic/depot"
+import { DepotData } from "$lib/logic/depot"
 import { GetRegionalString } from "$lib/utils"
 
 import { SERVERS } from "$lib/constants"
 
-const ItemData = await GetDepotData()
-
 export async function load({ params, parent }) {
-	const item = ItemData.itemTable[params.itemId]
+	const item = DepotData.itemTable[params.itemId]
 
 	return {
 		name: GetRegionalString(item.name, params.lang),
@@ -16,7 +14,7 @@ export async function load({ params, parent }) {
 		itemId: item.itemId,
 		iconId: item.iconId,
 
-		hasIcon: ItemData.availableIcons.includes(item.iconId),
+		hasIcon: DepotData.availableIcons.includes(item.iconId),
 	}
 }
 
@@ -24,7 +22,7 @@ export async function entries() {
 	const returns = []
 
 	for (const lang of SERVERS) {
-		for (const itemId of Object.keys(ItemData.itemTable)) {
+		for (const itemId of Object.keys(DepotData.itemTable)) {
 			returns.push({
 				itemId: itemId,
 				lang: lang,
