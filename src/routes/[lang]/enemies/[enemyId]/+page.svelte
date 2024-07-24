@@ -1,5 +1,6 @@
 <script>
     import ItemIcon from "$src/components/ItemIcon.svelte"
+    import Richtext from "$src/components/Richtext.svelte"
 
     const { data: props } = $props()
 </script>
@@ -7,6 +8,10 @@
 <svelte:head>
     <title>{props.name}</title>
 </svelte:head>
+
+{#snippet richtext(text)}
+     <Richtext {text} data={props.richtextTable} />
+{/snippet}
 
 <main class="max-w-3xl m-auto p-3">
     <!-- Display only on sm and DOWN -->
@@ -46,9 +51,9 @@
                     {ability.text}
                 </p>
             {:else if ability.textFormat === "NORMAL"}
-                <p>- {ability.text}</p>
+                {@render richtext(`- ${ability.text}`)}
             {:else if ability.textFormat === "SILENCE"}
-                <p>× {ability.text}</p>
+                {@render richtext(`× ${ability.text}`)}
             {/if}
         {/each}
     </div>

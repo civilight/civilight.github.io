@@ -8,16 +8,13 @@
 
     const { data } = $props()
 
-    const displayedEnemies = Object.values(data.enemies)
-        //.filter((v) => v.appearsInHandbook)
-        .toSorted(
-            (a, b) =>
-                a.sortId - b.sortId,
-        )
+    const displayedEnemies = Object.values(data.enemies).toSorted(
+        (a, b) => a.sortId - b.sortId,
+    )
 </script>
 
 <svelte:head>
-    <title>Enemies</title>
+    <title>{data.strings.enemies}</title>
 </svelte:head>
 
 <main
@@ -33,9 +30,7 @@
             class="relative hover:scale-110"
             title={GetRegionalString(enemy.name, data.lang)}
         >
-            <div
-                class="min-w-[30%] text-center absolute right-0 bg-black p-1"
-            >
+            <div class="min-w-[30%] text-center absolute right-0 bg-black p-1">
                 <p>{enemy.code}</p>
             </div>
 

@@ -19,13 +19,13 @@
 	},
 
 	"formatter": {
+		"lineWidth": 100,
 		"indentWidth": 4,
 		"indentStyle": "tab"
 	},
 
 	"javascript": {
 		"formatter": {
-			"lineWidth": 100,
 			"semicolons": "asNeeded"
 		}
 	}

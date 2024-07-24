@@ -1,5 +1,5 @@
-import { GetDepotData } from "$lib/logic/depot"
+import { DepotData } from "$lib/logic/depot"
 
 export async function load() {
-	return GetDepotData()
+	return DepotData
 }
