@@ -1,0 +1,93 @@
+name: Build and deploy website
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout datagen repo
+        uses: actions/checkout@v4
+        with:
+          repository: civilight/datagen
+          path: datagen
+          fetch-depth: 1
+
+      - name: Checkout code repo
+        uses: actions/checkout@v4
+        with:
+          path: webapp
+          fetch-depth: 1
+
+      - name: Checkout gamedata
+        uses: actions/checkout@v4
+        with:
+          repository: Kengxxiao/ArknightsGameData
+          path: tmp1
+          fetch-depth: 1
+
+      - name: Checkout gamedata (Yostar)
+        uses: actions/checkout@v4
+        with:
+          repository: Kengxxiao/ArknightsGameData_YoStar
+          path: tmp2
+          fetch-depth: 1
+
+      - name: Merge gamedata
+        run: |
+          mkdir gamedata
+          mv tmp1/* gamedata
+          mv tmp2/* gamedata
+          cp -ar gamedata datagen/
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.3.0
+
+      - name: Install Lune
+        uses: jaxxstorm/action-install-gh-release@v1.10.0
+        with:
+          repo: lune-org/lune
+          tag: v0.8.6
+
+      - name: Generate data
+        working-directory: datagen
+        run: |
+          lune run main.luau
+          mv out ../webapp/gamedata
+
+      - name: Build website
+        working-directory: webapp
+        run: |
+          npm install
+          npm run build
+          ls build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: webapp/build
+          retention-days: 7
+
+  deploy:
+    name: Deploy website
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Github Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
