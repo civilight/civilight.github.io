@@ -57,7 +57,7 @@ export function ParseRichtextToNodes(text: string): RichtextNode[] {
 				}
 			} else if (key === "i") {
 				// HARDCODING FTW
-				// this appears in Lumen's second module 'Luck'
+				// this appears in Lumen's second module 'Luck' (and a bunch of other places)
 				nodeData.formatters.push("@cc.pn")
 
 				for (const subNode of value) {

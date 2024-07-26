@@ -1,41 +1,119 @@
 import * as fs from "node:fs/promises"
 
-import { ASSETS_BRANCH, ASSETS_REPO, GAMEDATA_PATH } from "$lib/constants"
+import {
+	GAMEDATA_PATH,
+	ASSETS_REPO,
+	ASSETS_BRANCH,
+	SERVER_TO_LANGCODE_MAP,
+	SERVERS,
+} from "$lib/constants"
 
-import type { RegionalStrings, GHTrees } from "$lib/types"
-import { error } from "@sveltejs/kit"
+import type { GHTrees } from "$lib/types"
 
-type EnemiesTable = {
-	[enemyId: string]: {
-		enemyId: string
-		name: RegionalStrings
-		description: RegionalStrings
-		enemyTypes: string[]
+type RawEnemyInHandbookTable = {
+	enemyId: string
+	enemyIndex: string
+	sortId: number
+	abilityList: { text: string; textFormat: string }[]
+}
 
-		appearsInHandbook: boolean
-		code: string
-		sortId: number
-		abilities: {
-			text: RegionalStrings
-			textFormat: string
-		}[]
+type RawEnemyHandbook = {
+	enemyData: { [enemyId: string]: RawEnemyInHandbookTable }
+	raceData: {
+		[id: string]: {
+			id: string
+			raceName: string
+			sortId: number
+		}
 	}
 }
 
-type EnemyType = {
-	id: string
-	raceName: RegionalStrings
+type EnemyDatabaseValue<T> = {
+	m_defined: boolean
+	m_value: T
+}
+
+type RawEnemyDatabase = {
+	enemies: {
+		Key: string
+		Value: {
+			level: number
+			enemyData: {
+				name: EnemyDatabaseValue<string>
+				description: EnemyDatabaseValue<string | undefined>
+				enemyTags: EnemyDatabaseValue<string[] | undefined>
+			}
+		}[]
+	}[]
+}
+
+type ParsedEnemy = {
+	enemyId: string
+	name: string
+	description: string
+	enemyTypes: string[]
+	code: string
 	sortId: number
+	abilities: { text: string; textFormat: string }[]
 }
 
-type EnemiesResponse = {
-	enemies: EnemiesTable
-	enemyTypes: EnemyType[]
-	availableIcons: string[]
+type EnemiesTable = {
+	[enemyId: string]: ParsedEnemy
 }
 
-const contents = await fs.readFile(`${GAMEDATA_PATH}/enemy_table.json`)
-const table = JSON.parse(contents.toString()) as EnemiesTable
+export const Data: { [region: string]: EnemiesTable } = {}
+export const RaceData: { [region: string]: { [id: string]: { id: string; raceName: string } } } = {}
+
+for (const region of SERVERS) {
+	const langCode = SERVER_TO_LANGCODE_MAP[region]
+	Data[region] = {}
+
+	const rawHandbook = JSON.parse(
+		(
+			await fs.readFile(
+				`${GAMEDATA_PATH}/${langCode}/gamedata/excel/enemy_handbook_table.json`,
+			)
+		).toString(),
+	) as RawEnemyHandbook
+
+	const rawTable = JSON.parse(
+		(
+			await fs.readFile(
+				`${GAMEDATA_PATH}/${langCode}/gamedata/levels/enemydata/enemy_database.json`,
+			)
+		).toString(),
+	) as RawEnemyDatabase
+
+	RaceData[region] = rawHandbook.raceData
+
+	const largestSortId = Object.values(rawHandbook.enemyData).reduce((accumulated, curr) => {
+		if (curr.sortId > accumulated.sortId) {
+			return curr
+		}
+
+		return accumulated
+	}).sortId
+
+	for (const [idx, rawEnemyData] of Object.entries(rawTable.enemies)) {
+		const rawHandbookEnemy = rawHandbook.enemyData[rawEnemyData.Key] || {
+			enemyIndex: "",
+			sortId: Number.parseInt(idx) + largestSortId,
+			abilityList: [],
+		}
+
+		Data[region][rawEnemyData.Key] = {
+			enemyId: rawEnemyData.Key,
+
+			name: rawEnemyData.Value[0].enemyData.name.m_value,
+			description: rawEnemyData.Value[0].enemyData.description.m_value || "",
+			enemyTypes: rawEnemyData.Value[0].enemyData.enemyTags.m_value || [],
+
+			code: rawHandbookEnemy.enemyIndex,
+			sortId: rawHandbookEnemy.sortId,
+			abilities: rawHandbookEnemy.abilityList,
+		}
+	}
+}
 
 // fetch all the files from GitHub to determine which item has an icon and which
 // doesn't, so we can display it accordingly in the HTML
@@ -45,22 +123,18 @@ const ghTrees = (await (
 
 const enemies = ghTrees.tree.find((predicate) => predicate.path === "enemy")
 if (!enemies) {
-	error(500, "no 'enemy' tree found")
+	throw new Error("no 'enemy' tree found")
 }
 
 const enemiesTree = (await (await fetch(enemies.url)).json()) as GHTrees
+const rawTable = JSON.parse(
+	(
+		await fs.readFile(`${GAMEDATA_PATH}/zh_CN/gamedata/levels/enemydata/enemy_database.json`)
+	).toString(),
+) as RawEnemyDatabase
 
-// construct response
-const response = {} as EnemiesResponse
-
-response.enemies = table
-response.availableIcons = Object.values(table)
-	.filter((item) => {
-		return enemiesTree.tree.find((predicate) => predicate.path === `${item.enemyId}.png`)
+export const AvailableIcons = Object.values(rawTable.enemies)
+	.filter((v) => {
+		return enemiesTree.tree.find((p) => p.path === `${v.Key}.png`)
 	})
-	.map((thing) => thing.enemyId)
-
-const contents2 = await fs.readFile(`${GAMEDATA_PATH}/enemy_types_table.json`)
-response.enemyTypes = JSON.parse(contents2.toString())
-
-export const EnemyData = response
+	.map((v) => v.Key)

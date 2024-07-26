@@ -8,16 +8,9 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout datagen repo
-        uses: actions/checkout@v4
-        with:
-          repository: civilight/datagen
-          path: datagen
-          fetch-depth: 1
 
-      - name: Checkout code repo
+    steps:
+      - name: Checkout repo
         uses: actions/checkout@v4
         with:
           path: webapp
@@ -39,27 +32,14 @@ jobs:
 
       - name: Merge gamedata
         run: |
-          mkdir gamedata
-          mv tmp1/* gamedata
-          mv tmp2/* gamedata
-          cp -ar gamedata datagen/
+          mkdir webapp/gamedata
+          mv tmp1/* webapp/gamedata
+          mv tmp2/* webapp/gamedata
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22.3.0
-
-      - name: Install Lune
-        uses: jaxxstorm/action-install-gh-release@v1.10.0
-        with:
-          repo: lune-org/lune
-          tag: v0.8.6
-
-      - name: Generate data
-        working-directory: datagen
-        run: |
-          lune run main.luau
-          mv out ../webapp/gamedata
 
       - name: Build website
         working-directory: webapp
