@@ -33,9 +33,9 @@
         </div>
     </div>
 
-    <p class="bg-black/40 p-2 mb-4">
-        {props.description}
-    </p>
+    <div class="bg-black/40 p-2 mb-4">
+       {@render richtext(props.description)}
+    </div>
 
     <div class="bg-black/40 p-2">
         {#each props.abilities as ability, idx}

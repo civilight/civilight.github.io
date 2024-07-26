@@ -1,30 +1,59 @@
 import * as fs from "node:fs/promises"
 
-import { ASSETS_BRANCH, ASSETS_REPO, GAMEDATA_PATH } from "$lib/constants"
+import {
+	GAMEDATA_PATH,
+	ASSETS_REPO,
+	ASSETS_BRANCH,
+	SERVER_TO_LANGCODE_MAP,
+	SERVERS,
+} from "$lib/constants"
 
-import type { RegionalStrings, GHTrees } from "$lib/types"
-import { error } from "@sveltejs/kit"
+import type { GHTrees } from "$lib/types"
 
-type ItemTable = {
-	[itemId: string]: {
-		itemId: string
-		rarity: string
-		iconId: string
-		sortId: number
+type RawItemTable = {
+	items: {
+		[itemId: string]: {
+			itemId: string
+			iconId: string
+			sortId: number
 
-		name: RegionalStrings
-		description: RegionalStrings
-		usage: RegionalStrings
+			name: string
+			description: string
+			usage: string
+		}
 	}
 }
 
-type DepotResponse = {
-	itemTable: ItemTable
-	availableIcons: string[]
+type ParsedItem = {
+	itemId: string
+	iconId: string
+	sortId: number
+
+	name: string
+	description: string
+	usage: string
 }
 
-const contents = await fs.readFile(`${GAMEDATA_PATH}/item_table.json`)
-const itemTable = JSON.parse(contents.toString()) as ItemTable
+type ItemTable = {
+	[itemId: string]: ParsedItem
+}
+
+export const Data: { [region: string]: ItemTable } = {}
+
+for (const region of SERVERS) {
+	const langCode = SERVER_TO_LANGCODE_MAP[region]
+	Data[region] = {}
+
+	const rawTable = JSON.parse(
+		(
+			await fs.readFile(`${GAMEDATA_PATH}/${langCode}/gamedata/excel/item_table.json`)
+		).toString(),
+	) as RawItemTable
+
+	for (const rawItem of Object.values(rawTable.items)) {
+		Data[region][rawItem.itemId] = rawItem
+	}
+}
 
 // fetch all the files from GitHub to determine which item has an icon and which
 // doesn't, so we can display it accordingly in the HTML
@@ -34,19 +63,16 @@ const ghTrees = (await (
 
 const items = ghTrees.tree.find((predicate) => predicate.path === "items")
 if (!items) {
-	error(500, "no 'items' tree found")
+	throw new Error("no 'items' tree found")
 }
 
 const itemsTree = (await (await fetch(items.url)).json()) as GHTrees
+const rawTable = JSON.parse(
+	(await fs.readFile(`${GAMEDATA_PATH}/zh_CN/gamedata/excel/item_table.json`)).toString(),
+) as RawItemTable
 
-// construct response
-const response = {} as DepotResponse
-
-response.itemTable = itemTable
-response.availableIcons = Object.values(itemTable)
-	.filter((item) => {
-		return itemsTree.tree.find((predicate) => predicate.path === `${item.iconId}.png`)
+export const AvailableIcons = Object.values(rawTable.items)
+	.filter((v) => {
+		return itemsTree.tree.find((p) => p.path.includes(v.iconId))
 	})
-	.map((thing) => thing.iconId)
-
-export const DepotData = response
+	.map((v) => v.iconId)

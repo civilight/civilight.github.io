@@ -4,14 +4,13 @@
         ParseRichtextToNodes,
     } from "$lib/logic/richtext"
 
-    // importing a type from server is fine i suppose
-    import type { LocalizedRichtextData } from "$lib/server/richtext"
+    import type { RichtextTable } from "$lib/types"
 
     const ColorRegex = /<color=(.*?)>\{0}/gm
 
     type Props = {
         text: string
-        data: LocalizedRichtextData
+        data: RichtextTable
         ignoreFormatters?: boolean
     }
 
@@ -29,8 +28,6 @@
             if (ignoreFormatters) continue
 
             for (const formatter of rawNode.formatters) {
-                console.log(formatter)
-
                 if (formatter.at(0) === "@") {
                     const styleText = data.richTextStyles[formatter.slice(1)]
                     const matches = [...styleText.matchAll(ColorRegex)]

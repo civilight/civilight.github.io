@@ -12,3 +12,14 @@ export type GHTrees = {
 		url: string
 	}[]
 }
+
+export type RichtextTable = {
+	richTextStyles: { [key: string]: string }
+	termDescriptionDict: {
+		[key: string]: {
+			termId: string
+			termName: string
+			description: string
+		}
+	}
+}
