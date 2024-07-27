@@ -18,9 +18,13 @@ export async function load({ params }) {
 	return {
 		name: enemyData.name,
 		description: enemyData.description,
-		iconUrl: iconUrl,
+		tooltip: enemyData.tooltip,
+
 		abilities: enemyData.abilities,
-		types: enemyData.enemyTypes,
+		levels: enemyData.levels,
+
+		iconUrl: iconUrl,
+		types: types,
 	}
 }
 

@@ -13,11 +13,12 @@ import type { GHTrees } from "$lib/types"
 type RawEnemyInHandbookTable = {
 	enemyId: string
 	enemyIndex: string
+	description: string
 	sortId: number
 	abilityList: { text: string; textFormat: string }[]
 }
 
-type RawEnemyHandbook = {
+type RawHandbookTable = {
 	enemyData: { [enemyId: string]: RawEnemyInHandbookTable }
 	raceData: {
 		[id: string]: {
@@ -28,33 +29,53 @@ type RawEnemyHandbook = {
 	}
 }
 
-type EnemyDatabaseValue<T> = {
+type RawDatabaseValue<T> = {
 	m_defined: boolean
 	m_value: T
 }
 
-type RawEnemyDatabase = {
+type RawAttributes = {
+	[key: string]: RawDatabaseValue<unknown>
+}
+
+type RawDatabaseTable = {
 	enemies: {
 		Key: string
 		Value: {
 			level: number
 			enemyData: {
-				name: EnemyDatabaseValue<string>
-				description: EnemyDatabaseValue<string | undefined>
-				enemyTags: EnemyDatabaseValue<string[] | undefined>
+				name: RawDatabaseValue<string>
+				description: RawDatabaseValue<string | undefined>
+
+				lifePointReduce: RawDatabaseValue<number>
+
+				enemyTags: RawDatabaseValue<string[] | undefined>
+				attributes: RawAttributes
 			}
 		}[]
 	}[]
 }
 
+type ParsedAttributes = {
+	[key: string]: unknown
+	lifePointReduce: number | undefined
+}
+
+type ParsedEnemyLevels = { attributes: ParsedAttributes }[]
+
 type ParsedEnemy = {
 	enemyId: string
+
 	name: string
 	description: string
+	tooltip: string
+
 	enemyTypes: string[]
 	code: string
 	sortId: number
+
 	abilities: { text: string; textFormat: string }[]
+	levels: ParsedEnemyLevels
 }
 
 type EnemiesTable = {
@@ -74,7 +95,7 @@ for (const region of SERVERS) {
 				`${GAMEDATA_PATH}/${langCode}/gamedata/excel/enemy_handbook_table.json`,
 			)
 		).toString(),
-	) as RawEnemyHandbook
+	) as RawHandbookTable
 
 	const rawTable = JSON.parse(
 		(
@@ -82,7 +103,7 @@ for (const region of SERVERS) {
 				`${GAMEDATA_PATH}/${langCode}/gamedata/levels/enemydata/enemy_database.json`,
 			)
 		).toString(),
-	) as RawEnemyDatabase
+	) as RawDatabaseTable
 
 	RaceData[region] = rawHandbook.raceData
 
@@ -101,16 +122,39 @@ for (const region of SERVERS) {
 			abilityList: [],
 		}
 
+		const levels: ParsedEnemyLevels = []
+
+		for (const rawLevel of rawEnemyData.Value) {
+			const attributes: ParsedAttributes = {
+				lifePointReduce: rawLevel.enemyData.lifePointReduce.m_defined
+					? rawLevel.enemyData.lifePointReduce.m_value
+					: undefined,
+			}
+
+			for (const [attrKey, attrVal] of Object.entries(rawLevel.enemyData.attributes)) {
+				if (attrVal.m_defined) {
+					attributes[attrKey] = attrVal.m_value
+				}
+			}
+
+			levels.push({
+				attributes: attributes,
+			})
+		}
+
 		Data[region][rawEnemyData.Key] = {
 			enemyId: rawEnemyData.Key,
 
 			name: rawEnemyData.Value[0].enemyData.name.m_value,
-			description: rawEnemyData.Value[0].enemyData.description.m_value || "",
-			enemyTypes: rawEnemyData.Value[0].enemyData.enemyTags.m_value || [],
+			description: rawHandbookEnemy.description || "",
+			tooltip: rawEnemyData.Value[0].enemyData.description.m_value || "",
 
+			enemyTypes: rawEnemyData.Value[0].enemyData.enemyTags.m_value || [],
 			code: rawHandbookEnemy.enemyIndex,
 			sortId: rawHandbookEnemy.sortId,
+
 			abilities: rawHandbookEnemy.abilityList,
+			levels: levels,
 		}
 	}
 }
@@ -131,7 +175,7 @@ const rawTable = JSON.parse(
 	(
 		await fs.readFile(`${GAMEDATA_PATH}/zh_CN/gamedata/levels/enemydata/enemy_database.json`)
 	).toString(),
-) as RawEnemyDatabase
+) as RawDatabaseTable
 
 export const AvailableIcons = Object.values(rawTable.enemies)
 	.filter((v) => {

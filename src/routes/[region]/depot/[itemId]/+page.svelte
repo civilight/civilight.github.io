@@ -8,13 +8,15 @@
     <title>{data.name}</title>
 </svelte:head>
 
-<div class="max-w-xl min-h-dvh m-auto pt-6 pb-6 flex place-items-center">
-    <main class="w-full h-fit flex flex-row place-items-center">
-        <div class="w-[30%] h-fit pr-4">
+<div class="max-w-3xl min-h-dvh m-auto p-3 flex place-items-center">
+    <main
+        class="w-full h-fit flex flex-col gap-3 sm:flex-row place-items-center"
+    >
+        <div class="sm:w-[30%] h-fit pr-4">
             <ItemIcon url={data.iconUrl} name={data.name} />
         </div>
 
-        <div class="w-[70%] h-fit">
+        <div class="sm:w-[70%] h-fit">
             <p class="text-2xl font-bold">
                 {data.name}
             </p>
