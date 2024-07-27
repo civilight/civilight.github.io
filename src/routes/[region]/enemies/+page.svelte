@@ -17,7 +17,7 @@
 </svelte:head>
 
 <main
-    class="max-w-3xl m-auto pt-6 pb-6 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7"
+    class="max-w-3xl m-auto p-3 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7"
 >
     {#each displayedEnemies as enemy (enemy.enemyId)}
         {@const url = data.availableIcons.includes(enemy.enemyId)
