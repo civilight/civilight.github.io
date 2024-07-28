@@ -1,8 +1,8 @@
-import { Data, AvailableIcons } from "$lib/logic/depot"
+import { IconPaths, Data } from "$lib/logic/depot"
 
 export function load({ params }) {
 	return {
 		itemTable: Data[params.region],
-		availableIcons: AvailableIcons,
+		iconPaths: IconPaths,
 	}
 }

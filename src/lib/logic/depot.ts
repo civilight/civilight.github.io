@@ -3,12 +3,13 @@ import * as fs from "node:fs/promises"
 import {
 	GAMEDATA_PATH,
 	ASSETS_REPO,
-	ASSETS_BRANCH,
 	SERVER_TO_LANGCODE_MAP,
 	SERVERS,
+	ASSETS_PATH,
 } from "$lib/constants"
 
-import type { GHTrees } from "$lib/types"
+import type { GHContent, GHTrees } from "$lib/types"
+import { fetchWithAuth } from "$lib/utils"
 
 type RawItemTable = {
 	items: {
@@ -16,6 +17,7 @@ type RawItemTable = {
 			itemId: string
 			iconId: string
 			sortId: number
+			rarity: string
 
 			name: string
 			description: string
@@ -28,6 +30,7 @@ type ParsedItem = {
 	itemId: string
 	iconId: string
 	sortId: number
+	rarity: string
 
 	name: string
 	description: string
@@ -55,24 +58,51 @@ for (const region of SERVERS) {
 	}
 }
 
-// fetch all the files from GitHub to determine which item has an icon and which
-// doesn't, so we can display it accordingly in the HTML
-const ghTrees = (await (
-	await fetch(`https://api.github.com/repos/${ASSETS_REPO}/git/trees/${ASSETS_BRANCH}`)
-).json()) as GHTrees
+// item icons are scattered across the repo, so...
+export const IconPaths: { [k: string]: string } = {}
 
-const items = ghTrees.tree.find((predicate) => predicate.path === "items")
-if (!items) {
-	throw new Error("no 'items' tree found")
+{
+	const response = (await (
+		await fetchWithAuth(
+			`https://api.github.com/repos/${ASSETS_REPO}/contents/${ASSETS_PATH}/arts/items`,
+		)
+	).json()) as GHContent[]
+
+	const sha = response.find((v) => v.name === "icons")?.sha
+
+	const tree = (await (
+		await fetchWithAuth(
+			`https://api.github.com/repos/${ASSETS_REPO}/git/trees/${sha}?recursive=1`,
+		)
+	).json()) as GHTrees
+
+	for (const branch of tree.tree) {
+		const filePath = branch.path.slice(0, -4)
+		const fileName = filePath.split("/").at(-1) || ""
+
+		IconPaths[fileName] = `arts/items/icons/${branch.path}`
+	}
 }
 
-const itemsTree = (await (await fetch(items.url)).json()) as GHTrees
-const rawTable = JSON.parse(
-	(await fs.readFile(`${GAMEDATA_PATH}/zh_CN/gamedata/excel/item_table.json`)).toString(),
-) as RawItemTable
+{
+	const response = (await (
+		await fetchWithAuth(
+			`https://api.github.com/repos/${ASSETS_REPO}/contents/${ASSETS_PATH}/activity/commonassets/`,
+		)
+	).json()) as GHContent[]
 
-export const AvailableIcons = Object.values(rawTable.items)
-	.filter((v) => {
-		return itemsTree.tree.find((p) => p.path.includes(v.iconId))
-	})
-	.map((v) => v.iconId)
+	const sha = response.find((v) => v.name === "[uc]items")?.sha
+
+	const tree = (await (
+		await fetchWithAuth(
+			`https://api.github.com/repos/${ASSETS_REPO}/git/trees/${sha}?recursive=1`,
+		)
+	).json()) as GHTrees
+
+	for (const branch of tree.tree) {
+		const filePath = branch.path.slice(0, -4)
+		const fileName = filePath.split("/").at(-1) || ""
+
+		IconPaths[fileName] = `activity/commonassets/[uc]items/${branch.path}`
+	}
+}

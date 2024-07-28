@@ -13,6 +13,12 @@ export type GHTrees = {
 	}[]
 }
 
+export type GHContent = {
+	name: string
+	path: string
+	sha: string
+}
+
 export type RichtextTable = {
 	richTextStyles: { [key: string]: string }
 	termDescriptionDict: {
@@ -28,6 +34,7 @@ export type LocalizationTable = {
 	depot: string
 	enemies: string
 	glossary: string
+	operators: string
 
 	level: string
 }

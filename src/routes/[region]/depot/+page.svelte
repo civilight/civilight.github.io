@@ -1,9 +1,6 @@
 <script>
     import { base } from "$app/paths"
-
     import { IMAGE_CDN, ASSETS_BASE } from "$lib/constants"
-
-    import ItemIcon from "$src/components/ItemIcon.svelte"
 
     const { data } = $props()
 
@@ -17,21 +14,32 @@
 </svelte:head>
 
 <main
-    class="max-w-3xl m-auto p-3 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7"
+    class="max-w-3xl m-auto p-3 gap-1 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7"
 >
     {#each itemTable as [itemId, item] (itemId)}
-        {@const url = data.availableIcons.includes(item.iconId)
-            ? `${IMAGE_CDN}${ASSETS_BASE}/items/${item.iconId}.png`
+        {@const iconPath = data.iconPaths[item.iconId]}
+        {@const url = iconPath
+            ? `${IMAGE_CDN}${ASSETS_BASE}/${iconPath}`
             : "/missing.png"}
 
         <a
             href="{base}/{data.region}/depot/{itemId}"
-            class="hover:scale-110"
+            class="aspect-square relative flex place-items-center place-content-center hover:scale-110"
             title={item.name}
         >
-            <div class="aspect-square">
-                <ItemIcon {url} name={item.name} />
-            </div>
+            <img
+                src="/item_background/{item.rarity}.png"
+                alt="Background of item's icon, denoting rarity"
+                loading="lazy"
+                class="absolute max-w-full max-h-full"
+            />
+
+            <img
+                src={url}
+                alt="Icon of {item.name}"
+                loading="lazy"
+                class="absolute max-w-full max-h-full"
+            />
         </a>
     {/each}
 </main>
