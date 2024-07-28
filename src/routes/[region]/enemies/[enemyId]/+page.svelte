@@ -31,44 +31,42 @@
 
     {#if props.description !== ""}
         <div class="bg-black/40 p-2 mb-4">
-            <Richtext text={props.description} data={props.richtextTable} />
+            <Richtext text={props.description} />
         </div>
     {/if}
 
     {#if props.tooltip !== ""}
         <div class="bg-black/40 p-2 mb-4">
-            <Richtext text={props.tooltip} data={props.richtextTable} />
+            <Richtext text={props.tooltip} />
         </div>
     {/if}
 
-    <div class="bg-black/40 p-2">
-        {#each props.abilities as ability, idx}
-            <!-- have top padding only for the titles -->
-            {@const shouldPush = idx !== 0 && ability.textFormat === "TITLE"}
+    {#if props.abilities.length > 0}
+        <div class="bg-black/40 p-2">
+            {#each props.abilities as ability, idx}
+                <!-- have top padding only for the titles -->
+                {@const shouldPush =
+                    idx !== 0 && ability.textFormat === "TITLE"}
 
-            {#if ability.textFormat === "TITLE"}
-                <p
-                    class="font-bold text-lg text-red-500 {shouldPush
-                        ? 'pt-3'
-                        : ''}"
-                >
-                    {ability.text}
-                </p>
-            {:else if ability.textFormat === "NORMAL"}
-                <Richtext
-                    text={`- ${ability.text}`}
-                    data={props.richtextTable}
-                />
-            {:else if ability.textFormat === "SILENCE"}
-                <Richtext
-                    text={`× ${ability.text}`}
-                    data={props.richtextTable}
-                />
-            {/if}
-        {/each}
-    </div>
+                {#if ability.textFormat === "TITLE"}
+                    <p
+                        class="font-bold text-lg text-red-500 {shouldPush
+                            ? 'pt-3'
+                            : ''}"
+                    >
+                        {ability.text}
+                    </p>
+                {:else if ability.textFormat === "NORMAL"}
+                    <Richtext text={`- ${ability.text}`} />
+                {:else if ability.textFormat === "SILENCE"}
+                    <Richtext text={`× ${ability.text}`} />
+                {/if}
+            {/each}
+        </div>
+    {/if}
 
-    <!-- this is horrible -->
+    <!-- the entire thing below is horrible -->
+    <!-- but it works, so alas... -->
     {#each props.levels as level, idx}
         <details class="mt-4 group border border-gray-400 bg-black/40">
             <summary class="p-2 group-open:border-b border-gray-400"
@@ -76,6 +74,7 @@
             >
 
             <div class="p-2">
+                <!-- attributes -->
                 <table class="border w-full">
                     <tbody>
                         {#each Object.entries(level.attributes) as [attrKey, attrVal]}
@@ -89,6 +88,7 @@
                     </tbody>
                 </table>
 
+                <!-- talents -->
                 <table class="border w-full mt-2">
                     <tbody>
                         {#each Object.values(level.talentBlackboard) as talent}
@@ -104,6 +104,7 @@
                     </tbody>
                 </table>
 
+                <!-- skills -->
                 <table class="border w-full mt-2">
                     <tbody>
                         {#each Object.values(level.skills) as skill}

@@ -1,14 +1,9 @@
 import { GAMEDATA_PATH, SERVER_TO_LANGCODE_MAP, SERVERS } from "$lib/constants"
 import * as fs from "node:fs/promises"
 
-import type { RichtextTable } from "$lib/types"
+import type { RichtextTable, LocalizationTable } from "$lib/types"
 
-type LocalizationTable = {
-	depot: string
-	enemies: string
-	level: string
-}
-
+// read localization files
 const Localizations: { [region: string]: LocalizationTable } = {}
 const dirContents = await fs.readdir("src/localization")
 
@@ -19,6 +14,7 @@ for (const filename of dirContents) {
 	Localizations[filename.replace(".json", "")] = table
 }
 
+// read richtext data
 type RawGamedataConst = RichtextTable
 
 const GamedataConst: { [region: string]: RawGamedataConst } = {}

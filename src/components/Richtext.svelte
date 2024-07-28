@@ -4,28 +4,33 @@
         ParseRichtextToNodes,
     } from "$lib/logic/richtext"
 
-    import type { RichtextTable } from "$lib/types"
+    import { base } from "$app/paths"
+    import { page } from "$app/stores" // do not ever use this component outside of [region] layout
 
     const ColorRegex = /<color=(.*?)>\{0}/gm
 
     type Props = {
         text: string
-        data: RichtextTable
-        ignoreFormatters?: boolean
     }
 
-    const { text, data, ignoreFormatters = false }: Props = $props()
+    const { text }: Props = $props()
+    const data = $page.data.richtextTable
 
     const rawNodes = $derived(ParseRichtextToNodes(text))
     const nodes = $derived.by(() => {
         const returns = []
 
         for (const rawNode of rawNodes) {
-            const newNode = { text: "", class: "", style: "", title: "" }
+            const newNode = {
+                text: "",
+                class: "whitespace-pre-line ",
+                style: "",
+                title: "",
+                isGlossary: false,
+                effectKey: "",
+            }
             returns.push(newNode)
             newNode.text = rawNode.text
-
-            if (ignoreFormatters) continue
 
             for (const formatter of rawNode.formatters) {
                 if (formatter.at(0) === "@") {
@@ -50,6 +55,8 @@
 
                     newNode.title = effectTitle
                     newNode.class += "underline text-red-200"
+                    newNode.isGlossary = true
+                    newNode.effectKey = formatter.slice(1)
                 }
             }
         }
@@ -60,8 +67,17 @@
 
 <div>
     {#each nodes as node}
-        <span class={node.class} title={node.title} style={node.style}
-            >{@html EscapeNonHTMLRichtext(node.text)}</span
-        >
+        {#if node.isGlossary}
+            <a
+                href={`${base}/${$page.data.region}/glossary#${node.effectKey}`}
+                class={node.class}
+                title={node.title}
+                style={node.style}>{@html EscapeNonHTMLRichtext(node.text)}</a
+            >
+        {:else}
+            <span class={node.class} title={node.title} style={node.style}
+                >{@html EscapeNonHTMLRichtext(node.text)}</span
+            >
+        {/if}
     {/each}
 </div>
