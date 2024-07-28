@@ -23,3 +23,11 @@ export type RichtextTable = {
 		}
 	}
 }
+
+export type LocalizationTable = {
+	depot: string
+	enemies: string
+	glossary: string
+
+	level: string
+}
