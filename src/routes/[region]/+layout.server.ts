@@ -6,6 +6,7 @@ import type { RichtextTable } from "$lib/types"
 type LocalizationTable = {
 	depot: string
 	enemies: string
+	level: string
 }
 
 const Localizations: { [region: string]: LocalizationTable } = {}
