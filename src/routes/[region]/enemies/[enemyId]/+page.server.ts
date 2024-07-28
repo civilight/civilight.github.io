@@ -1,13 +1,12 @@
 import { SERVERS, IMAGE_CDN, ASSETS_BASE } from "$lib/constants"
 
-import { Data, AvailableIcons, RaceData } from "$lib/logic/enemies"
+import { Data, IconPaths, RaceData } from "$lib/logic/enemies"
 
 export async function load({ params }) {
 	const enemyData = Data[params.region][params.enemyId]
 
-	const iconUrl = AvailableIcons.includes(enemyData.enemyId)
-		? `${IMAGE_CDN}${ASSETS_BASE}/enemy/${enemyData.enemyId}.png`
-		: "/missing.png"
+	const iconPath = IconPaths[enemyData.enemyId]
+	const iconUrl = iconPath ? `${IMAGE_CDN}${ASSETS_BASE}/${iconPath}` : "/missing.png"
 
 	const types = []
 	for (const type of Object.values(enemyData.enemyTypes)) {

@@ -1,5 +1,4 @@
 <script>
-    import ItemIcon from "$src/components/ItemIcon.svelte"
     import Richtext from "$src/components/Richtext.svelte"
 
     const { data: props } = $props()
@@ -12,13 +11,13 @@
 <main class="max-w-3xl m-auto p-3">
     <!-- Display only on sm and DOWN -->
     <div class="block sm:hidden max-w-sm m-auto mb-4">
-        <ItemIcon url={props.iconUrl} name={props.name} />
+        <img src={props.iconUrl} alt="Icon of {props.name}" />
     </div>
 
     <div class="flex mb-4">
         <!-- Display only on sm and UP -->
         <div class="mr-2 hidden sm:block max-w-[30%]">
-            <ItemIcon url={props.iconUrl} name={props.name} />
+            <img src={props.iconUrl} alt="Icon of {props.name}" />
         </div>
 
         <div>

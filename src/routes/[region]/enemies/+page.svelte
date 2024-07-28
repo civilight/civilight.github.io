@@ -1,9 +1,6 @@
 <script>
     import { base } from "$app/paths"
-
     import { IMAGE_CDN, ASSETS_BASE } from "$lib/constants"
-
-    import ItemIcon from "$src/components/ItemIcon.svelte"
 
     const { data } = $props()
 
@@ -20,8 +17,9 @@
     class="max-w-3xl m-auto p-3 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7"
 >
     {#each displayedEnemies as enemy (enemy.enemyId)}
-        {@const url = data.availableIcons.includes(enemy.enemyId)
-            ? `${IMAGE_CDN}${ASSETS_BASE}/enemy/${enemy.enemyId}.png`
+        {@const iconPath = data.iconPaths[enemy.enemyId]}
+        {@const url = iconPath
+            ? `${IMAGE_CDN}${ASSETS_BASE}/${iconPath}`
             : "/missing.png"}
 
         <a
@@ -34,7 +32,7 @@
             </div>
 
             <div class="aspect-square">
-                <ItemIcon {url} name={enemy.name} />
+                <img src={url} alt="Icon of {enemy.name}" />
             </div>
         </a>
     {/each}

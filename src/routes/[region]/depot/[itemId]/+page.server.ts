@@ -1,17 +1,17 @@
 import { SERVERS, IMAGE_CDN, ASSETS_BASE } from "$lib/constants"
-import { Data, AvailableIcons } from "$lib/logic/depot"
+import { Data, IconPaths } from "$lib/logic/depot"
 
 export async function load({ params }) {
 	const itemData = Data[params.region][params.itemId]
 
-	const iconUrl = AvailableIcons.includes(itemData.iconId)
-		? `${IMAGE_CDN}${ASSETS_BASE}/items/${itemData.iconId}.png`
-		: "/missing.png"
+	const iconPath = IconPaths[params.itemId]
+	const iconUrl = iconPath ? `${IMAGE_CDN}${ASSETS_BASE}/${iconPath}` : "/missing.png"
 
 	return {
 		name: itemData.name,
 		description: itemData.description,
 		usage: itemData.usage,
+		rarity: itemData.rarity,
 
 		itemId: itemData.itemId,
 		iconUrl: iconUrl,

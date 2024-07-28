@@ -3,12 +3,13 @@ import * as fs from "node:fs/promises"
 import {
 	GAMEDATA_PATH,
 	ASSETS_REPO,
-	ASSETS_BRANCH,
 	SERVER_TO_LANGCODE_MAP,
 	SERVERS,
+	ASSETS_PATH,
 } from "$lib/constants"
 
-import type { GHTrees } from "$lib/types"
+import type { GHContent, GHTrees } from "$lib/types"
+import { fetchWithAuth } from "$lib/utils"
 
 type RawEnemyInHandbookTable = {
 	enemyId: string
@@ -205,26 +206,26 @@ for (const region of SERVERS) {
 	}
 }
 
-// fetch all the files from GitHub to determine which item has an icon and which
-// doesn't, so we can display it accordingly in the HTML
-const ghTrees = (await (
-	await fetch(`https://api.github.com/repos/${ASSETS_REPO}/git/trees/${ASSETS_BRANCH}`)
-).json()) as GHTrees
+// fetch enemy icons
+export const IconPaths: { [k: string]: string } = {}
 
-const enemies = ghTrees.tree.find((predicate) => predicate.path === "enemy")
-if (!enemies) {
-	throw new Error("no 'enemy' tree found")
+{
+	const response = (await (
+		await fetchWithAuth(
+			`https://api.github.com/repos/${ASSETS_REPO}/contents/${ASSETS_PATH}/arts`,
+		)
+	).json()) as GHContent[]
+
+	const sha = response.find((v) => v.name === "enemies")?.sha
+
+	const tree = (await (
+		await fetchWithAuth(
+			`https://api.github.com/repos/${ASSETS_REPO}/git/trees/${sha}?recursive=1`,
+		)
+	).json()) as GHTrees
+
+	for (const branch of tree.tree) {
+		const fileName = branch.path.slice(0, -4)
+		IconPaths[fileName] = `arts/enemies/${branch.path}`
+	}
 }
-
-const enemiesTree = (await (await fetch(enemies.url)).json()) as GHTrees
-const rawTable = JSON.parse(
-	(
-		await fs.readFile(`${GAMEDATA_PATH}/zh_CN/gamedata/levels/enemydata/enemy_database.json`)
-	).toString(),
-) as RawDatabaseTable
-
-export const AvailableIcons = Object.values(rawTable.enemies)
-	.filter((v) => {
-		return enemiesTree.tree.find((p) => p.path === `${v.Key}.png`)
-	})
-	.map((v) => v.Key)

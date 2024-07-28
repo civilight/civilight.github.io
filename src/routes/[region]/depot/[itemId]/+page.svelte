@@ -1,6 +1,4 @@
 <script>
-    import ItemIcon from "$src/components/ItemIcon.svelte"
-
     const { data } = $props()
 </script>
 
@@ -12,8 +10,22 @@
     <main
         class="w-full h-fit flex flex-col gap-3 sm:flex-row place-items-center"
     >
-        <div class="sm:w-[30%] h-fit pr-4">
-            <ItemIcon url={data.iconUrl} name={data.name} />
+        <div
+            class="relative sm:w-[30%] h-fit pr-4 flex place-items-center place-content-center"
+        >
+            <img
+                src={data.iconUrl}
+                alt="Icon of {data.name}"
+                loading="lazy"
+                class="absolute max-w-full max-h-full"
+            />
+
+            <img
+                src="/item_background/{data.rarity}.png"
+                alt="Background of item's icon, denoting rarity"
+                loading="lazy"
+                class="max-w-full max-h-full"
+            />
         </div>
 
         <div class="sm:w-[70%] h-fit">
