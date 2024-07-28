@@ -51,6 +51,8 @@ type RawDatabaseTable = {
 
 				enemyTags: RawDatabaseValue<string[] | undefined>
 				attributes: RawAttributes
+				talentBlackboard: TalentBlackboard[] | undefined
+				skills: RawSkill[] | undefined
 			}
 		}[]
 	}[]
@@ -61,7 +63,31 @@ type ParsedAttributes = {
 	lifePointReduce: number | undefined
 }
 
-type ParsedEnemyLevels = { attributes: ParsedAttributes }[]
+type TalentBlackboard = {
+	key: string
+	value: unknown | undefined
+	valueStr: unknown | undefined
+}
+
+type RawSkill = {
+	prefabKey: string
+	priority: number
+	cooldown: number
+	initCooldown: number
+	spCost: number
+	blackboard: TalentBlackboard[] | undefined
+}
+
+type ParsedSkill = {
+	prefabKey: string
+	[key: string]: unknown
+}
+
+type ParsedEnemyLevels = {
+	attributes: ParsedAttributes
+	talentBlackboard: TalentBlackboard[]
+	skills: ParsedSkill[]
+}[]
 
 type ParsedEnemy = {
 	enemyId: string
@@ -107,13 +133,7 @@ for (const region of SERVERS) {
 
 	RaceData[region] = rawHandbook.raceData
 
-	const largestSortId = Object.values(rawHandbook.enemyData).reduce((accumulated, curr) => {
-		if (curr.sortId > accumulated.sortId) {
-			return curr
-		}
-
-		return accumulated
-	}).sortId
+	const largestSortId = Math.max(...Object.values(rawHandbook.enemyData).map((v) => v.sortId))
 
 	for (const [idx, rawEnemyData] of Object.entries(rawTable.enemies)) {
 		const rawHandbookEnemy = rawHandbook.enemyData[rawEnemyData.Key] || {
@@ -123,22 +143,48 @@ for (const region of SERVERS) {
 		}
 
 		const levels: ParsedEnemyLevels = []
+		const rawLevel0 = rawEnemyData.Value[0]
 
 		for (const rawLevel of rawEnemyData.Value) {
 			const attributes: ParsedAttributes = {
 				lifePointReduce: rawLevel.enemyData.lifePointReduce.m_defined
 					? rawLevel.enemyData.lifePointReduce.m_value
-					: undefined,
+					: rawLevel0.enemyData.lifePointReduce.m_value,
 			}
 
 			for (const [attrKey, attrVal] of Object.entries(rawLevel.enemyData.attributes)) {
 				if (attrVal.m_defined) {
 					attributes[attrKey] = attrVal.m_value
+				} else {
+					attributes[attrKey] = rawLevel0.enemyData.attributes[attrKey].m_value
 				}
+			}
+
+			const rawSkills = rawLevel.enemyData.skills || []
+			const parsedSkills: ParsedSkill[] = []
+
+			for (const rawSkill of rawSkills) {
+				const parsedSkill: ParsedSkill = {
+					prefabKey: rawSkill.prefabKey,
+					priority: rawSkill.priority,
+					cooldown: rawSkill.cooldown,
+					initCooldown: rawSkill.initCooldown,
+					spCost: rawSkill.spCost,
+				}
+
+				if (rawSkill.blackboard) {
+					for (const blackboard of rawSkill.blackboard) {
+						parsedSkill[blackboard.key] = blackboard.valueStr || blackboard.value
+					}
+				}
+
+				parsedSkills.push(parsedSkill)
 			}
 
 			levels.push({
 				attributes: attributes,
+				talentBlackboard: rawLevel.enemyData.talentBlackboard || [],
+				skills: parsedSkills,
 			})
 		}
 
