@@ -1,5 +1,5 @@
 <script>
-    import {base} from "$app/paths"
+    import { base } from "$app/paths"
 
     const { children, data } = $props()
 </script>
@@ -17,8 +17,8 @@
     <div class="w-full md:w-[50%] xl:w-[30%] h-full center-children m-auto">
         {@render link(data.strings.depot, "depot")}
         {@render link(data.strings.enemies, "enemies")}
-        {@render link(data.strings.glossary, "glossary")}
         {@render link(data.strings.operators, "operators")}
+        {@render link(data.strings.glossary, "glossary")}
     </div>
 </div>
 

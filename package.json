@@ -1,20 +1,21 @@
 {
 	"name": "rhodesdb",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"devDependencies": {
-		"@biomejs/biome": "^1.8.3",
 		"@sveltejs/adapter-static": "^3.0.2",
 		"@sveltejs/kit": "^2.5.18",
 		"@sveltejs/vite-plugin-svelte": "^3.1.1",
-		"@tailwindcss/vite": "^4.0.0-alpha.17",
-		"@types/node": "^20.14.12",
-		"fast-xml-parser": "^4.4.0",
-		"svelte": "^5.0.0-next.197",
+		"@tailwindcss/vite": "^4.0.0-alpha.18",
+		"@types/node": "^22.0.0",
+		"autoprefixer": "^10.4.19",
+		"fast-xml-parser": "^4.4.1",
+		"postcss": "^8.4.40",
+		"svelte": "^5.0.0-next.201",
 		"svelte-check": "^3.8.4",
-		"tailwindcss": "^4.0.0-alpha.17",
+		"tailwindcss": "^3.4.7",
 		"tslib": "^2.6.3",
 		"typescript": "^5.5.4",
-		"vite": "^5.3.4"
+		"vite": "^5.3.5"
 	},
 	"private": true,
 	"scripts": {
@@ -24,8 +25,5 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
-	"trustedDependencies": [
-		"@biomejs/biome"
-	],
 	"type": "module"
 }
