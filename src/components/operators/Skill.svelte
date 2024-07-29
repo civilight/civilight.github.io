@@ -15,13 +15,13 @@
 	const { skillData, strings }: Props = $props()
 </script>
 
-<div class="w-full center-children flex-col bg-black/40 mb-2 p-1 rounded-sm">
+<div class="center-children mb-2 w-full flex-col rounded-sm bg-black/40 p-1">
 	<!-- header, includes skill icon and name -->
-	<div class="w-full h-16 flex mb-2">
+	<div class="mb-2 flex h-16 w-full">
 		<img
 			src="{IMAGE_CDN}{ASSETS_BASE}/arts/skills/{skillData.iconPath}"
 			alt="Icon of skill {skillData.name}"
-			class="aspect-square mr-3"
+			class="mr-3 aspect-square"
 		/>
 
 		<p class="font-bold">{skillData.name}</p>
@@ -29,7 +29,7 @@
 
 	<!-- body, includes levels -->
 	<details class="w-full bg-black/50">
-		<summary class="pl-2 pr-2 p-1">{strings.level_plural}</summary>
+		<summary class="p-1 pl-2 pr-2">{strings.level_plural}</summary>
 		<table class="mt-2 w-full">
 			<thead>
 				<tr>
@@ -83,7 +83,7 @@
 	}
 
 	img {
-		@apply max-w-full max-h-full;
+		@apply max-h-full max-w-full;
 	}
 
 	.desc {

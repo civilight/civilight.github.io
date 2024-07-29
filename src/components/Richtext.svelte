@@ -5,7 +5,7 @@
 	import { page } from "$app/stores" // do not ever use this component outside of [region] layout
 
 	import type { BlackboardEntry } from "$lib/types"
-	
+
 	const ColorRegex = /<color=(.*?)>\{0}/gm
 	const BlackboardVarRegex = /{(.+)}/gm
 
@@ -28,7 +28,7 @@
 				style: "",
 				title: "",
 				isGlossary: false,
-				effectKey: "",
+				effectKey: ""
 			}
 			let text = rawNode.text
 
@@ -73,7 +73,7 @@
 							text = text.replace(
 								entireMatch,
 								value.toLocaleString(undefined, {
-									style: "percent",
+									style: "percent"
 								})
 							)
 						} else if (varFormat === "0.0%") {
@@ -82,7 +82,7 @@
 								entireMatch,
 								value.toLocaleString(undefined, {
 									style: "percent",
-									minimumFractionDigits: 1,
+									minimumFractionDigits: 1
 								})
 							)
 						}

@@ -17,14 +17,10 @@
 	"json.format.keepLines": true,
 	"git.enableSmartCommit": true,
 
-	"prettier.useTabs": true,
-	"prettier.tabWidth": 4,
-	"prettier.singleQuote": false,
-	"prettier.semi": false,
-	"prettier.printWidth": 100,
+	"prettier.documentSelectors": [ "**/*.svelte" ],
 
 	"[jsonc][json]": {
-		"editor.defaultFormatter": "vscode.json-language-features"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 
 	"javascript.updateImportsOnFileMove.enabled": "always",
@@ -34,7 +30,7 @@
 	},
 
 	"[svelte]": {
-		"editor.defaultFormatter": "svelte.svelte-vscode"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 
 	"svelte.enable-ts-plugin": true

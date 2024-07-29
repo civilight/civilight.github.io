@@ -30,6 +30,8 @@ type RawCharSkill = {
 	levelUpCostCond: RawSkillMasteryData[]
 }
 
+type RawCharTrait = {}
+
 type RawCharacter = {
 	rarity: string
 
@@ -45,6 +47,7 @@ type RawCharacter = {
 	subProfessionId: string
 
 	skills: RawCharSkill[]
+	trait: RawCharTrait[] | undefined
 }
 
 type RawCharacterTable = { [id: string]: RawCharacter }
@@ -110,13 +113,13 @@ for (const region of SERVERS) {
 	const rawCharTable = JSON.parse(
 		(
 			await fs.readFile(`${GAMEDATA_PATH}/${langCode}/gamedata/excel/character_table.json`)
-		).toString()
+		).toString(),
 	) as RawCharacterTable
 
 	const RawSkillTable = JSON.parse(
 		(
 			await fs.readFile(`${GAMEDATA_PATH}/${langCode}/gamedata/excel/skill_table.json`)
-		).toString()
+		).toString(),
 	) as RawSkillTable
 
 	for (const [charId, rawChar] of Object.entries(rawCharTable)) {
