@@ -44,21 +44,21 @@
 			<tbody>
 				{#each skillData.levels as levelData, idx}
 					<tr>
-						<td>{idx}</td>
+						<td>{idx + 1}</td>
 						<td class="desc">
 							<Richtext
 								text={levelData.description}
 								blackboard={levelData.blackboard}
 							/>
 						</td>
-						<td>{levelData.spData.initSp}</td>
-						<td>{levelData.spData.spCost}</td>
+						<td>{levelData.spData.initSp > 0 ? levelData.spData.initSp : "-"}</td>
+						<td>{levelData.spData.spCost > 0 ? levelData.spData.spCost : "-"}</td>
 						<td>{levelData.duration > 0 ? `${levelData.duration}s` : "-"}</td>
 					</tr>
 
 					<!-- blackboard for this skill level -->
 					<tr>
-						<td colspan="5" class="bg-neutral-700">
+						<td colspan="5" class="bg-gray-300/10">
 							<details>
 								<summary class="desc">{strings.blackboard}</summary>
 								<Blackboard data={levelData.blackboard} />

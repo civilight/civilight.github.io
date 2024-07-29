@@ -28,7 +28,11 @@ export function ParseRichtextToNodes(text: string): RichtextNode[] {
 	})
 
 	const nodes: RichtextNode[] = []
-	const obj = parser.parse(`<root>${EscapeNonHTMLRichtext(text)}</root>`)
+
+	// EXPERIMENTAL: some CN data has an escaped linebreak (ie. \\n), which will result in invalid
+	// HTML rendering (no linebreaks, just a literal \n character)
+	// we escape those \\n here, but I can't foresee if this would break anything...
+	const obj = parser.parse(`<root>${EscapeNonHTMLRichtext(text.replaceAll("\\n", "\n"))}</root>`)
 
 	// biome-ignore lint/suspicious/noExplicitAny: too lazy to type lol
 	function parseNode(root: any, parentNodeData: RichtextNode | undefined) {
