@@ -15,9 +15,9 @@
 	const { skillData, strings }: Props = $props()
 </script>
 
-<div class="w-full center-children flex-col bg-black/40 mb-2 rounded-sm">
+<div class="w-full center-children flex-col bg-black/40 mb-2 p-1 rounded-sm">
 	<!-- header, includes skill icon and name -->
-	<div class="w-full h-16 flex p-2 mb-2">
+	<div class="w-full h-16 flex mb-2">
 		<img
 			src="{IMAGE_CDN}{ASSETS_BASE}/arts/skills/{skillData.iconPath}"
 			alt="Icon of skill {skillData.name}"
