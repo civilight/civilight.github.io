@@ -30,7 +30,23 @@ type RawCharSkill = {
 	levelUpCostCond: RawSkillMasteryData[]
 }
 
-type RawCharTrait = {}
+type RawCharTrait = {
+	unlockCondition: PhaseData
+	requiredPotentialRank: number
+	blackboard: BlackboardEntry[] | undefined
+	overrideDescripton: string | undefined // true HG fashion typo
+}
+
+type RawCharTalent = {
+	name: string
+	description: string
+
+	unlockCondition: PhaseData
+	requiredPotentialRank: number
+
+	blackboard: BlackboardEntry[] | undefined
+	isHideTalent: boolean
+}
 
 type RawCharacter = {
 	rarity: string
@@ -47,7 +63,8 @@ type RawCharacter = {
 	subProfessionId: string
 
 	skills: RawCharSkill[]
-	trait: RawCharTrait[] | undefined
+	trait: { candidates: RawCharTrait[] } | undefined
+	talents: { candidates: RawCharTalent[] }[] | undefined
 }
 
 type RawCharacterTable = { [id: string]: RawCharacter }
@@ -82,12 +99,23 @@ export type ParsedSkill = {
 	masteryCosts: RawSkillMasteryData[]
 }
 
+type ParsedTrait = {
+	unlockCondition: PhaseData
+	requiredPotentialRank: number
+	blackboard: BlackboardEntry[] | undefined
+	description: string
+}
+
+type ParsedTalent = {
+	name: string
+	candidates: RawCharTalent[]
+}
+
 type ParsedCharacter = {
 	charId: string
 	rarity: string
 
 	name: string
-	trait: string
 	appellation: string
 
 	code: string
@@ -98,6 +126,8 @@ type ParsedCharacter = {
 	subProfession: string
 
 	skills: ParsedSkill[]
+	traits: ParsedTrait[]
+	talents: ParsedTalent[]
 }
 
 type CharacterTable = { [id: string]: ParsedCharacter }
@@ -151,12 +181,58 @@ for (const region of SERVERS) {
 			}
 		}
 
+		// parse traits
+		const traits: ParsedTrait[] = []
+
+		{
+			if (rawChar.trait) {
+				for (const candidate of rawChar.trait.candidates) {
+					const parsedTrait: ParsedTrait = {
+						description: candidate.overrideDescripton || rawChar.description || "",
+						blackboard: candidate.blackboard,
+						requiredPotentialRank: candidate.requiredPotentialRank,
+						unlockCondition: candidate.unlockCondition
+					}
+
+					traits.push(parsedTrait)
+				}
+			} else {
+				traits.push({
+					description: rawChar.description || "",
+					blackboard: undefined,
+					requiredPotentialRank: 0,
+					unlockCondition: {
+						phase: "PHASE_0",
+						level: 1
+					}
+				})
+			}
+		}
+
+		// parse talents
+		let talents: ParsedTalent[] = []
+
+		{
+			if (rawChar.talents) {
+				for (const rawTalent of rawChar.talents) {
+					// why does Ulpianus have an invalid talent...
+					if (rawTalent.candidates[0].isHideTalent) {
+						continue
+					}
+
+					talents.push({
+						name: rawTalent.candidates[0].name,
+						candidates: rawTalent.candidates
+					})
+				}
+			}
+		}
+
 		const parsedChar: ParsedCharacter = {
 			charId: charId,
 			rarity: rawChar.rarity,
 
 			name: rawChar.name || "",
-			trait: rawChar.description || "",
 			appellation: rawChar.appellation || "",
 
 			code: rawChar.displayNumber || "",
@@ -166,7 +242,9 @@ for (const region of SERVERS) {
 			profession: rawChar.profession,
 			subProfession: rawChar.subProfessionId,
 
-			skills: skills
+			skills: skills,
+			traits: traits,
+			talents: talents
 		}
 
 		Data[region][charId] = parsedChar
