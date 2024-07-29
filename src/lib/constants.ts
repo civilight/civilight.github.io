@@ -18,5 +18,5 @@ export const SERVER_TO_LANGCODE_MAP: { [region: string]: string } = {
 	en: "en_US",
 	cn: "zh_CN",
 	jp: "ja_JP",
-	kr: "ko_KR",
+	kr: "ko_KR"
 }

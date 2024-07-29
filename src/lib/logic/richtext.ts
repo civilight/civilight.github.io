@@ -24,7 +24,7 @@ export function ParseRichtextToNodes(text: string): RichtextNode[] {
 		alwaysCreateTextNode: true,
 		trimValues: false,
 		parseAttributeValue: false,
-		parseTagValue: false,
+		parseTagValue: false
 	})
 
 	const nodes: RichtextNode[] = []
@@ -37,8 +37,8 @@ export function ParseRichtextToNodes(text: string): RichtextNode[] {
 		const nodeData: RichtextNode = structuredClone(
 			parentNodeData || {
 				text: "",
-				formatters: [],
-			},
+				formatters: []
+			}
 		)
 
 		if (key === "#text") {

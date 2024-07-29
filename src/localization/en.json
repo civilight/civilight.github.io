@@ -1,15 +1,15 @@
 {
-    "depot": "Depot",
-    "enemies": "Enemies",
-    "glossary": "Glossary",
-    "operators": "Operators",
+	"depot": "Depot",
+	"enemies": "Enemies",
+	"glossary": "Glossary",
+	"operators": "Operators",
 
-    "level": "Level",
-    "level_plural": "Levels",
+	"level": "Level",
+	"level_plural": "Levels",
 
-    "description": "Description",
-    "duration": "Duration",
-    "init_sp": "Initial SP",
-    "sp_cost": "SP Cost",
-    "blackboard": "Blackboard"
+	"description": "Description",
+	"duration": "Duration",
+	"init_sp": "Initial SP",
+	"sp_cost": "SP Cost",
+	"blackboard": "Blackboard"
 }

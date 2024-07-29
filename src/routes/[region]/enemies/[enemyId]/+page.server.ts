@@ -23,7 +23,7 @@ export async function load({ params }) {
 		levels: enemyData.levels,
 
 		iconUrl: iconUrl,
-		types: types,
+		types: types
 	}
 }
 
@@ -34,7 +34,7 @@ export async function entries() {
 		for (const enemy of Object.values(Data[region])) {
 			returns.push({
 				enemyId: enemy.enemyId,
-				region: region,
+				region: region
 			})
 		}
 	}
