@@ -37,4 +37,17 @@ export type LocalizationTable = {
 	operators: string
 
 	level: string
+	level_plural: string
+
+	description: string
+	duration: string
+	init_sp: string
+	sp_cost: string
+	blackboard: string
+}
+
+export type BlackboardEntry = {
+	key: string
+	value: number
+	valueStr: string | undefined
 }
