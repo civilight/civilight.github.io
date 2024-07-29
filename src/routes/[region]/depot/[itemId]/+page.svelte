@@ -6,13 +6,9 @@
     <title>{data.name}</title>
 </svelte:head>
 
-<div class="max-w-3xl min-h-dvh m-auto p-3 flex place-items-center">
-    <main
-        class="w-full h-fit flex flex-col gap-3 sm:flex-row place-items-center"
-    >
-        <div
-            class="relative sm:w-[30%] h-fit pr-4 flex place-items-center place-content-center"
-        >
+<div class="max-w-3xl min-h-dvh m-auto p-2 center-children">
+    <main class="w-full h-fit center-children flex-col gap-3 sm:flex-row">
+        <div class="relative sm:w-[30%] h-fit pr-4 center-children">
             <img
                 src={data.iconUrl}
                 alt="Icon of {data.name}"

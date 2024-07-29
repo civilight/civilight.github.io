@@ -8,9 +8,9 @@
     <title>{props.name}</title>
 </svelte:head>
 
-<main class="max-w-3xl m-auto p-3">
+<main class="max-w-3xl m-auto p-2">
     <!-- Display only on sm and DOWN -->
-    <div class="block sm:hidden max-w-sm m-auto mb-4">
+    <div class="sm:hidden max-w-sm m-auto mb-4 center-children">
         <img src={props.iconUrl} alt="Icon of {props.name}" />
     </div>
 

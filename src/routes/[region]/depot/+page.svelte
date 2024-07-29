@@ -14,7 +14,7 @@
 </svelte:head>
 
 <main
-    class="max-w-3xl m-auto p-3 gap-1 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7"
+    class="max-w-3xl m-auto p-2 gap-1 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7"
 >
     {#each itemTable as [itemId, item] (itemId)}
         {@const iconPath = data.iconPaths[item.iconId]}
@@ -24,7 +24,7 @@
 
         <a
             href="{base}/{data.region}/depot/{itemId}"
-            class="aspect-square relative flex place-items-center place-content-center hover:scale-110"
+            class="aspect-square relative center-children hover:scale-110"
             title={item.name}
         >
             <img
