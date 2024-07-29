@@ -6,9 +6,9 @@
 	<title>{data.name}</title>
 </svelte:head>
 
-<div class="max-w-3xl min-h-dvh m-auto p-2 center-children">
-	<main class="center-children w-full h-fit flex-col gap-3 sm:flex-row;">
-		<div class="relative sm:w-[30%] h-fit pr-4 center-children">
+<div class="center-children m-auto min-h-dvh max-w-3xl p-2">
+	<main class="center-children sm:flex-row; h-fit w-full flex-col gap-3">
+		<div class="center-children relative h-fit pr-4 sm:w-[30%]">
 			<img src={data.iconUrl} alt="Icon of {data.name}" loading="lazy" class="absolute" />
 
 			<img
@@ -18,7 +18,7 @@
 			/>
 		</div>
 
-		<div class="sm:w-[70%] h-fit">
+		<div class="h-fit sm:w-[70%]">
 			<p class="text-2xl font-bold">
 				{data.name}
 			</p>
@@ -32,6 +32,6 @@
 
 <style lang="postcss">
 	img {
-		@apply w-auto h-full max-w-full max-h-full object-contain;
+		@apply h-full max-h-full w-auto max-w-full object-contain;
 	}
 </style>

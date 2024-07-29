@@ -10,7 +10,7 @@
 		TIER_4: 4,
 		TIER_3: 3,
 		TIER_2: 2,
-		TIER_1: 1,
+		TIER_1: 1
 	}
 
 	const rarityToColorMap: { [key: string]: string } = {
@@ -19,7 +19,7 @@
 		TIER_4: "bg-violet-200",
 		TIER_3: "bg-blue-500",
 		TIER_2: "bg-lime-300",
-		TIER_1: "bg-neutral-100",
+		TIER_1: "bg-neutral-100"
 	}
 
 	// sort by name alphabetically, as well as higher rarity first
@@ -39,7 +39,7 @@
 	<title>{data.strings.operators}</title>
 </svelte:head>
 
-<main class="max-w-3xl m-auto p-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+<main class="m-auto grid max-w-3xl grid-cols-3 gap-2 p-2 md:grid-cols-4 lg:grid-cols-6">
 	{#each charTable as charData}
 		<a
 			class="{rarityToColorMap[
@@ -47,7 +47,7 @@
 			]} relative aspect-[9/16] overflow-hidden hover:scale-105"
 			href="{base}/{data.region}/operators/{charData.charId}"
 		>
-			<div class="absolute w-full h-full bg-gradient-to-b from-black/20 to-black/90"></div>
+			<div class="absolute h-full w-full bg-gradient-to-b from-black/20 to-black/90"></div>
 
 			<div class="absolute bottom-0 w-full p-2">
 				{#if charData.appellation !== ""}
@@ -57,11 +57,11 @@
 				<p class="font-bold">{charData.name}</p>
 			</div>
 
-			<div class="absolute right-0 bg-black p-1.5 w-10 h-10 center-children">
+			<div class="center-children absolute right-0 h-10 w-10 bg-black p-1.5">
 				<img
 					src="{IMAGE_CDN}{ASSETS_BASE}/arts/ui/subprofessionicon/sub_{charData.subProfession}_icon.png"
 					alt="Icon of sub profession"
-					class="w-full h-auto"
+					class="h-auto w-full"
 					loading="lazy"
 				/>
 			</div>
@@ -69,7 +69,7 @@
 			<img
 				src="{IMAGE_CDN}{ASSETS_BASE}/arts/charportraits/{charData.charId}_1.png"
 				alt="Portrait of {charData.name}"
-				class="w-full h-auto"
+				class="h-auto w-full"
 				loading="lazy"
 			/>
 		</a>

@@ -8,34 +8,34 @@
 	<title>{props.name}</title>
 </svelte:head>
 
-<main class="max-w-3xl m-auto p-2">
+<main class="m-auto max-w-3xl p-2">
 	<!-- Display only on sm and DOWN -->
-	<div class="sm:hidden max-w-sm m-auto mb-4 center-children">
+	<div class="center-children m-auto mb-4 max-w-sm sm:hidden">
 		<img src={props.iconUrl} alt="Icon of {props.name}" />
 	</div>
 
-	<div class="flex mb-4">
+	<div class="mb-4 flex">
 		<!-- Display only on sm and UP -->
-		<div class="mr-2 hidden sm:block max-w-[30%]">
+		<div class="mr-2 hidden max-w-[30%] sm:block">
 			<img src={props.iconUrl} alt="Icon of {props.name}" />
 		</div>
 
 		<div>
-			<p class="font-bold text-2xl">{props.name}</p>
-			<p class="font-bold text-lg text-slate-400">
+			<p class="text-2xl font-bold">{props.name}</p>
+			<p class="text-lg font-bold text-slate-400">
 				{props.types.join(" ")}
 			</p>
 		</div>
 	</div>
 
 	{#if props.description !== ""}
-		<div class="bg-black/40 p-2 mb-4">
+		<div class="mb-4 bg-black/40 p-2">
 			<Richtext text={props.description} />
 		</div>
 	{/if}
 
 	{#if props.tooltip !== ""}
-		<div class="bg-black/40 p-2 mb-4">
+		<div class="mb-4 bg-black/40 p-2">
 			<Richtext text={props.tooltip} />
 		</div>
 	{/if}
@@ -47,7 +47,7 @@
 				{@const shouldPush = idx !== 0 && ability.textFormat === "TITLE"}
 
 				{#if ability.textFormat === "TITLE"}
-					<p class="font-bold text-lg text-red-500 {shouldPush ? 'pt-3' : ''}">
+					<p class="text-lg font-bold text-red-500 {shouldPush ? 'pt-3' : ''}">
 						{ability.text}
 					</p>
 				{:else if ability.textFormat === "NORMAL"}
@@ -62,8 +62,8 @@
 	<!-- the entire thing below is horrible -->
 	<!-- but it works, so alas... -->
 	{#each props.levels as level, idx}
-		<details class="mt-4 group border border-gray-200/50 bg-black/40">
-			<summary class="p-2 group-open:border-b border-gray-200/50"
+		<details class="group mt-4 border border-gray-200/50 bg-black/40">
+			<summary class="border-gray-200/50 p-2 group-open:border-b"
 				>{`${props.strings.level} ${idx}`}</summary
 			>
 
@@ -81,7 +81,7 @@
 				</table>
 
 				<!-- talents -->
-				<table class="w-full mt-2">
+				<table class="mt-2 w-full">
 					<tbody>
 						{#each Object.values(level.talentBlackboard) as talent}
 							<tr class="border">
@@ -93,7 +93,7 @@
 				</table>
 
 				<!-- skills -->
-				<table class="w-full mt-2">
+				<table class="mt-2 w-full">
 					<tbody>
 						{#each Object.values(level.skills) as skill}
 							<tr>

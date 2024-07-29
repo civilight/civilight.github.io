@@ -11,8 +11,8 @@
 	<title>{charData.name}</title>
 </svelte:head>
 
-<main class="max-w-3xl m-auto p-2 center-children flex-col">
-	<h1 class="font-bold text-2xl">{charData.name}</h1>
+<main class="center-children m-auto max-w-3xl flex-col p-2">
+	<h1 class="text-2xl font-bold">{charData.name}</h1>
 
 	{#if charData.appellation.trim() !== ""}
 		<p>{charData.appellation}</p>
@@ -25,23 +25,25 @@
 		</div>
 	{/if}
 
-	<div class="center-children gap-3 mt-5 mb-5">
+	<div class="center-children mb-10 mt-5 gap-3">
 		<p>{charData.code}</p>
 
-		<div class="w-8 h-8 center-children">
+		<div class="center-children h-8 w-8">
 			<img
 				src="{IMAGE_CDN}{ASSETS_BASE}/arts/ui/[uc]charcommon/profession/icon_profession_{charData.profession.toLowerCase()}.png"
 				alt="Icon of profession"
 			/>
 		</div>
 
-		<div class="w-8 h-8 center-children">
+		<div class="center-children h-8 w-8">
 			<img
 				src="{IMAGE_CDN}{ASSETS_BASE}/arts/ui/subprofessionicon/sub_{charData.subProfession}_icon.png"
 				alt="Icon of sub profession"
 			/>
 		</div>
 	</div>
+
+	<div class="mb-5 w-full bg-black/40"></div>
 
 	{#each charData.skills as skillData}
 		<Skill {skillData} strings={data.strings} />
