@@ -4,7 +4,7 @@ import { Data, IconPaths } from "$lib/logic/depot"
 export async function load({ params }) {
 	const itemData = Data[params.region][params.itemId]
 
-	const iconPath = IconPaths[params.itemId]
+	const iconPath = IconPaths[itemData.iconId]
 	const iconUrl = iconPath ? `${IMAGE_CDN}${ASSETS_BASE}/${iconPath}` : "/missing.png"
 
 	return {
