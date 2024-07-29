@@ -14,7 +14,7 @@ export async function load({ params }) {
 		rarity: itemData.rarity,
 
 		itemId: itemData.itemId,
-		iconUrl: iconUrl,
+		iconUrl: iconUrl
 	}
 }
 
@@ -25,7 +25,7 @@ export async function entries() {
 		for (const itemId of Object.keys(Data[region])) {
 			returns.push({
 				itemId: itemId,
-				region: region,
+				region: region
 			})
 		}
 	}

@@ -5,7 +5,7 @@ import {
 	ASSETS_REPO,
 	ASSETS_BRANCH,
 	SERVER_TO_LANGCODE_MAP,
-	SERVERS,
+	SERVERS
 } from "$lib/constants"
 
 import type { BlackboardEntry } from "$lib/types"
@@ -113,13 +113,13 @@ for (const region of SERVERS) {
 	const rawCharTable = JSON.parse(
 		(
 			await fs.readFile(`${GAMEDATA_PATH}/${langCode}/gamedata/excel/character_table.json`)
-		).toString(),
+		).toString()
 	) as RawCharacterTable
 
 	const RawSkillTable = JSON.parse(
 		(
 			await fs.readFile(`${GAMEDATA_PATH}/${langCode}/gamedata/excel/skill_table.json`)
-		).toString(),
+		).toString()
 	) as RawSkillTable
 
 	for (const [charId, rawChar] of Object.entries(rawCharTable)) {
@@ -146,7 +146,7 @@ for (const region of SERVERS) {
 					name: rawSkillData.levels[0].name,
 
 					levels: rawSkillData.levels,
-					masteryCosts: rawCharSkill.levelUpCostCond,
+					masteryCosts: rawCharSkill.levelUpCostCond
 				})
 			}
 		}
@@ -166,7 +166,7 @@ for (const region of SERVERS) {
 			profession: rawChar.profession,
 			subProfession: rawChar.subProfessionId,
 
-			skills: skills,
+			skills: skills
 		}
 
 		Data[region][charId] = parsedChar

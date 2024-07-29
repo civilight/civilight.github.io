@@ -23,14 +23,14 @@ for (const region of SERVERS) {
 	const rawTable = JSON.parse(
 		(
 			await fs.readFile(
-				`${GAMEDATA_PATH}/${SERVER_TO_LANGCODE_MAP[region]}/gamedata/excel/gamedata_const.json`,
+				`${GAMEDATA_PATH}/${SERVER_TO_LANGCODE_MAP[region]}/gamedata/excel/gamedata_const.json`
 			)
-		).toString(),
+		).toString()
 	) as RawGamedataConst
 
 	GamedataConst[region] = {
 		richTextStyles: rawTable.richTextStyles,
-		termDescriptionDict: rawTable.termDescriptionDict,
+		termDescriptionDict: rawTable.termDescriptionDict
 	}
 }
 
@@ -40,6 +40,6 @@ export function load({ params }) {
 	return {
 		richtextTable: GamedataConst[params.region],
 		strings: localizationTable,
-		region: params.region,
+		region: params.region
 	}
 }

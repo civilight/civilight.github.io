@@ -5,7 +5,7 @@ import {
 	ASSETS_REPO,
 	SERVER_TO_LANGCODE_MAP,
 	SERVERS,
-	ASSETS_PATH,
+	ASSETS_PATH
 } from "$lib/constants"
 
 import type { GHContent, GHTrees } from "$lib/types"
@@ -119,17 +119,17 @@ for (const region of SERVERS) {
 	const rawHandbook = JSON.parse(
 		(
 			await fs.readFile(
-				`${GAMEDATA_PATH}/${langCode}/gamedata/excel/enemy_handbook_table.json`,
+				`${GAMEDATA_PATH}/${langCode}/gamedata/excel/enemy_handbook_table.json`
 			)
-		).toString(),
+		).toString()
 	) as RawHandbookTable
 
 	const rawTable = JSON.parse(
 		(
 			await fs.readFile(
-				`${GAMEDATA_PATH}/${langCode}/gamedata/levels/enemydata/enemy_database.json`,
+				`${GAMEDATA_PATH}/${langCode}/gamedata/levels/enemydata/enemy_database.json`
 			)
-		).toString(),
+		).toString()
 	) as RawDatabaseTable
 
 	RaceData[region] = rawHandbook.raceData
@@ -140,7 +140,7 @@ for (const region of SERVERS) {
 		const rawHandbookEnemy = rawHandbook.enemyData[rawEnemyData.Key] || {
 			enemyIndex: "",
 			sortId: Number.parseInt(idx) + largestSortId,
-			abilityList: [],
+			abilityList: []
 		}
 
 		const levels: ParsedEnemyLevels = []
@@ -150,7 +150,7 @@ for (const region of SERVERS) {
 			const attributes: ParsedAttributes = {
 				lifePointReduce: rawLevel.enemyData.lifePointReduce.m_defined
 					? rawLevel.enemyData.lifePointReduce.m_value
-					: rawLevel0.enemyData.lifePointReduce.m_value,
+					: rawLevel0.enemyData.lifePointReduce.m_value
 			}
 
 			for (const [attrKey, attrVal] of Object.entries(rawLevel.enemyData.attributes)) {
@@ -170,7 +170,7 @@ for (const region of SERVERS) {
 					priority: rawSkill.priority,
 					cooldown: rawSkill.cooldown,
 					initCooldown: rawSkill.initCooldown,
-					spCost: rawSkill.spCost,
+					spCost: rawSkill.spCost
 				}
 
 				if (rawSkill.blackboard) {
@@ -185,7 +185,7 @@ for (const region of SERVERS) {
 			levels.push({
 				attributes: attributes,
 				talentBlackboard: rawLevel.enemyData.talentBlackboard || [],
-				skills: parsedSkills,
+				skills: parsedSkills
 			})
 		}
 
@@ -201,7 +201,7 @@ for (const region of SERVERS) {
 			sortId: rawHandbookEnemy.sortId,
 
 			abilities: rawHandbookEnemy.abilityList,
-			levels: levels,
+			levels: levels
 		}
 	}
 }
@@ -212,7 +212,7 @@ export const IconPaths: { [k: string]: string } = {}
 {
 	const response = (await (
 		await fetchWithAuth(
-			`https://api.github.com/repos/${ASSETS_REPO}/contents/${ASSETS_PATH}/arts`,
+			`https://api.github.com/repos/${ASSETS_REPO}/contents/${ASSETS_PATH}/arts`
 		)
 	).json()) as GHContent[]
 
@@ -220,7 +220,7 @@ export const IconPaths: { [k: string]: string } = {}
 
 	const tree = (await (
 		await fetchWithAuth(
-			`https://api.github.com/repos/${ASSETS_REPO}/git/trees/${sha}?recursive=1`,
+			`https://api.github.com/repos/${ASSETS_REPO}/git/trees/${sha}?recursive=1`
 		)
 	).json()) as GHTrees
 

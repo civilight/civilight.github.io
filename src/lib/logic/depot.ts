@@ -5,7 +5,7 @@ import {
 	ASSETS_REPO,
 	SERVER_TO_LANGCODE_MAP,
 	SERVERS,
-	ASSETS_PATH,
+	ASSETS_PATH
 } from "$lib/constants"
 
 import type { GHContent, GHTrees } from "$lib/types"
@@ -50,7 +50,7 @@ for (const region of SERVERS) {
 	const rawTable = JSON.parse(
 		(
 			await fs.readFile(`${GAMEDATA_PATH}/${langCode}/gamedata/excel/item_table.json`)
-		).toString(),
+		).toString()
 	) as RawItemTable
 
 	for (const rawItem of Object.values(rawTable.items)) {
@@ -64,7 +64,7 @@ export const IconPaths: { [k: string]: string } = {}
 {
 	const response = (await (
 		await fetchWithAuth(
-			`https://api.github.com/repos/${ASSETS_REPO}/contents/${ASSETS_PATH}/arts/items`,
+			`https://api.github.com/repos/${ASSETS_REPO}/contents/${ASSETS_PATH}/arts/items`
 		)
 	).json()) as GHContent[]
 
@@ -72,7 +72,7 @@ export const IconPaths: { [k: string]: string } = {}
 
 	const tree = (await (
 		await fetchWithAuth(
-			`https://api.github.com/repos/${ASSETS_REPO}/git/trees/${sha}?recursive=1`,
+			`https://api.github.com/repos/${ASSETS_REPO}/git/trees/${sha}?recursive=1`
 		)
 	).json()) as GHTrees
 
@@ -87,7 +87,7 @@ export const IconPaths: { [k: string]: string } = {}
 {
 	const response = (await (
 		await fetchWithAuth(
-			`https://api.github.com/repos/${ASSETS_REPO}/contents/${ASSETS_PATH}/activity/commonassets/`,
+			`https://api.github.com/repos/${ASSETS_REPO}/contents/${ASSETS_PATH}/activity/commonassets/`
 		)
 	).json()) as GHContent[]
 
@@ -95,7 +95,7 @@ export const IconPaths: { [k: string]: string } = {}
 
 	const tree = (await (
 		await fetchWithAuth(
-			`https://api.github.com/repos/${ASSETS_REPO}/git/trees/${sha}?recursive=1`,
+			`https://api.github.com/repos/${ASSETS_REPO}/git/trees/${sha}?recursive=1`
 		)
 	).json()) as GHTrees
 
