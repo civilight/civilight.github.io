@@ -7,7 +7,7 @@
 	import type { BlackboardEntry } from "$lib/types"
 
 	const ColorRegex = /<color=(.*?)>\{0}/gm
-	const BlackboardVarRegex = /{(.+)}/gm
+	const BlackboardVarRegex = /{(.*?)}/gm
 
 	type Props = {
 		text: string
@@ -17,81 +17,76 @@
 	const { text, blackboard }: Props = $props()
 	const data = $page.data.richtextTable
 
-	const rawNodes = $derived(ParseRichtextToNodes(text))
+	// replace variables in the text
+	let processedText = text
+	if (blackboard) {
+		const matches = [...processedText.matchAll(BlackboardVarRegex)]
+
+		for (const match of matches) {
+			const entireMatch = match[0]
+			const varGroup = match[1]
+
+			// simple var substitution
+			const blackboardEntry = blackboard.find((v) => v.key === varGroup)
+			if (blackboardEntry) {
+				processedText = processedText.replace(
+					entireMatch,
+					blackboardEntry.valueStr || blackboardEntry.value.toString()
+				)
+			} else {
+				// more complex var substitution
+				let [varName, varFormat] = varGroup.split(":")
+				let negateValue = false
+
+				if (varName.indexOf("-") === 0) {
+					negateValue = true
+					varName = varName.slice(1)
+				}
+
+				const blackboardEntry = blackboard.find((v) => v.key === varName.toLowerCase())
+				if (!blackboardEntry) continue // hmmm...
+
+				let value = blackboardEntry.value
+				if (negateValue) {
+					value = -value
+				}
+
+				if (varFormat === "0%") {
+					// format as percentage
+					processedText = processedText.replace(
+						entireMatch,
+						value.toLocaleString(undefined, {
+							style: "percent"
+						})
+					)
+				} else if (varFormat === "0.0%") {
+					// format as percentage with 1 trailing zero
+					processedText = processedText.replace(
+						entireMatch,
+						value.toLocaleString(undefined, {
+							style: "percent",
+							minimumFractionDigits: 1
+						})
+					)
+				}
+			}
+		}
+	}
+
+	const rawNodes = $derived(ParseRichtextToNodes(processedText))
 	const nodes = $derived.by(() => {
 		const returns = []
 
 		for (const rawNode of rawNodes) {
 			const newNode = {
-				text: "",
+				text: rawNode.text,
 				class: "whitespace-pre-line ",
 				style: "",
 				title: "",
 				isGlossary: false,
 				effectKey: ""
 			}
-			let text = rawNode.text
-
-			// replace variables in the text
-			if (blackboard) {
-				const matches = [...text.matchAll(BlackboardVarRegex)]
-
-				for (const match of matches) {
-					const entireMatch = match[0]
-					const varGroup = match[1]
-
-					// simple var substitution
-					const blackboardEntry = blackboard.find((v) => v.key === varGroup)
-					if (blackboardEntry) {
-						text = text.replace(
-							entireMatch,
-							blackboardEntry.valueStr || blackboardEntry.value.toString()
-						)
-					} else {
-						// more complex var substitution
-						let [varName, varFormat] = varGroup.split(":")
-						let negateValue = false
-
-						if (varName.indexOf("-") === 0) {
-							negateValue = true
-							varName = varName.slice(1)
-						}
-
-						const blackboardEntry = blackboard.find(
-							(v) => v.key === varName.toLowerCase()
-						)
-
-						if (!blackboardEntry) continue // hmmm...
-
-						let value = blackboardEntry.value
-						if (negateValue) {
-							value = -value
-						}
-
-						if (varFormat === "0%") {
-							// format as percentage
-							text = text.replace(
-								entireMatch,
-								value.toLocaleString(undefined, {
-									style: "percent"
-								})
-							)
-						} else if (varFormat === "0.0%") {
-							// format as percentage with 1 trailing zero
-							text = text.replace(
-								entireMatch,
-								value.toLocaleString(undefined, {
-									style: "percent",
-									minimumFractionDigits: 1
-								})
-							)
-						}
-					}
-				}
-			}
-
 			returns.push(newNode)
-			newNode.text = text
 
 			for (const formatter of rawNode.formatters) {
 				if (formatter.at(0) === "@") {
