@@ -7,7 +7,7 @@
 </svelte:head>
 
 <div class="center-children m-auto min-h-dvh max-w-3xl p-2">
-	<main class="center-children sm:flex-row; h-fit w-full flex-col gap-3">
+	<main class="center-children h-fit w-full flex-col gap-3 sm:flex-row">
 		<div class="center-children relative h-fit pr-4 sm:w-[30%]">
 			<img src={data.iconUrl} alt="Icon of {data.name}" loading="lazy" class="absolute" />
 
