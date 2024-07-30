@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { ASSETS_BASE, IMAGE_CDN } from "$lib/constants"
 
-	import Skill from "$src/components/operators/Skill.svelte"
 	import Richtext from "$src/components/Richtext.svelte"
 	import Blackboard from "$src/components/Blackboard.svelte"
 
@@ -12,6 +11,14 @@
 		PHASE_0: "elite_0",
 		PHASE_1: "elite_1",
 		PHASE_2: "elite_2"
+	}
+
+	function NumberToImagePath(number: number) {
+		if (number <= 6) {
+			return `${IMAGE_CDN}${ASSETS_BASE}/arts/number_hub/solid_${number + 1}.png`
+		} else {
+			return `${IMAGE_CDN}${ASSETS_BASE}/arts/specialized_hub/specialized_${number - 6}.png`
+		}
 	}
 </script>
 
@@ -51,6 +58,7 @@
 		</div>
 	</div>
 
+	<!-- Trait -->
 	<div class="mb-5 flex w-full flex-col gap-1 bg-black/40 p-1">
 		{#each charData.traits as traitData}
 			<div class="bg-black/30 p-2">
@@ -66,79 +74,86 @@
 				</div>
 
 				<Richtext text={traitData.description} blackboard={traitData.blackboard} />
-
-				{#if traitData.blackboard}
-					<details class="mt-2 bg-gray-300/10 p-1">
-						<summary class="desc">{data.strings.blackboard}</summary>
-						<Blackboard data={traitData.blackboard} />
-					</details>
-				{/if}
 			</div>
 		{/each}
 	</div>
 
-	<div class="mb-5 flex w-full flex-col gap-1 bg-black/40 p-1">
+	<!-- Talents -->
+	<div class="mb-5 w-full bg-black/40 p-1">
 		{#each charData.talents as talentData}
-			<table class="bg-black/30">
-				<tbody>
-					<tr class="bg-gray-600/30">
-						<th colspan="2">{talentData.name}</th>
-					</tr>
+			<div class="flex flex-col gap-1 bg-black/40 p-1">
+				{#each talentData.candidates as candidate, idx}
+					{#if idx === 0 || (idx > 0 && talentData.candidates[idx - 1].name !== candidate.name)}
+						<p class="bg-gray-600/30 p-1 font-bold">{candidate.name}</p>
+					{/if}
 
-					{#each talentData.candidates as candidate}
-						<tr>
-							<td class="desc">
-								<div class="center-children flex-col md:flex-row">
-									<img
-										src="{IMAGE_CDN}{ASSETS_BASE}/arts/elite_hub/{PhaseToEliteIcon[
-											candidate.unlockCondition.phase
-										]}.png"
-										alt="Icon of elite phase"
-									/>
+					<div class="bg-black/30 p-1">
+						<div class="mb-2 flex h-8 place-items-center gap-1">
+							<img
+								src="{IMAGE_CDN}{ASSETS_BASE}/arts/elite_hub/{PhaseToEliteIcon[
+									candidate.unlockCondition.phase
+								]}.png"
+								alt="Icon of elite phase"
+							/>
 
-									{#if candidate.requiredPotentialRank > 0}
-										<img
-											src="{IMAGE_CDN}{ASSETS_BASE}/arts/potential_hub/potential_{candidate.requiredPotentialRank}_small.png"
-											alt="Icon of potential"
-										/>
-									{/if}
-
-									{#if candidate.unlockCondition.level > 1}
-										<p>Lv. {candidate.unlockCondition.level}</p>
-									{/if}
-								</div>
-							</td>
-							<td>
-								<Richtext
-									text={candidate.description}
-									blackboard={candidate.blackboard}
+							{#if candidate.requiredPotentialRank > 0}
+								<img
+									src="{IMAGE_CDN}{ASSETS_BASE}/arts/potential_hub/potential_{candidate.requiredPotentialRank}.png"
+									alt="Icon of potential"
 								/>
-							</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
+							{/if}
+
+							<p>Lv. {candidate.unlockCondition.level}</p>
+						</div>
+
+						<Richtext text={candidate.description} blackboard={candidate.blackboard} />
+					</div>
+				{/each}
+			</div>
 		{/each}
 	</div>
 
+	<!-- Skills -->
 	{#each charData.skills as skillData}
-		<Skill {skillData} strings={data.strings} />
+		<div class="center-children mb-2 w-full flex-col bg-black/40 p-1">
+			<!-- header, includes skill icon and name -->
+			<div class="mb-2 flex h-16 w-full">
+				<img
+					src="{IMAGE_CDN}{ASSETS_BASE}/arts/skills/{skillData.iconPath}"
+					alt="Icon of skill {skillData.name}"
+					class="mr-3 aspect-square"
+				/>
+
+				<p class="font-bold">{skillData.name}</p>
+			</div>
+
+			<!-- body, includes levels -->
+			<details class="w-full bg-black/40 p-1">
+				{#each skillData.levels as levelData, idx}
+					<div class="mt-1 bg-black/40 p-1">
+						<!-- SP Cost and stuff -->
+						<div class="mb-2 flex gap-1">
+							<div class="center-children relative h-8 w-fit p-1">
+								<img src={NumberToImagePath(idx)} alt="Skill level {idx}" />
+							</div>
+							<div class="center-children h-8 w-fit bg-orange-400/40 p-1">
+								<p>{levelData.spData.initSp}/{levelData.spData.spCost} SP</p>
+							</div>
+							<div class="center-children h-8 w-fit bg-green-400/40 p-1">
+								<p>{levelData.duration > 0 ? `${levelData.duration}s` : "-"}</p>
+							</div>
+						</div>
+
+						<Richtext text={levelData.description} blackboard={levelData.blackboard} />
+					</div>
+				{/each}
+			</details>
+		</div>
 	{/each}
 </main>
 
 <style lang="postcss">
-	td,
-	th {
-		@apply border border-neutral-200/50;
-		@apply p-1;
-		@apply text-left;
-	}
-
 	img {
 		@apply max-h-full max-w-full;
-	}
-
-	.desc {
-		@apply p-0 pl-4 pr-4;
 	}
 </style>

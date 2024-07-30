@@ -68,6 +68,14 @@
 							minimumFractionDigits: 1
 						})
 					)
+				} else if (varFormat === "0.0") {
+					// number with 1 trailing zero
+					processedText = processedText.replace(
+						entireMatch,
+						value.toLocaleString(undefined, {
+							minimumFractionDigits: 1
+						})
+					)
 				}
 			}
 		}
