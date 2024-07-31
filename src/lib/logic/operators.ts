@@ -156,12 +156,27 @@ for (const region of SERVERS) {
 		if (rawChar.subProfessionId.includes("notchar") || rawChar.profession === "TOKEN") continue
 		if (charId === "char_512_aprot") continue // why is there a duplicate Shalem
 
+		console.log(region, charId)
+
 		// parse skills
 		const skills: ParsedSkill[] = []
 
 		{
 			for (const rawCharSkill of rawChar.skills) {
-				const rawSkillData = RawSkillTable[rawCharSkill.skillId]
+				// TEMPORARY: 31/7/2024, KR gamedata was missing Kestrel's skills
+				let rawSkillData = RawSkillTable[rawCharSkill.skillId]
+				if (!rawSkillData) {
+					rawSkillData = (
+						JSON.parse(
+							(
+								await fs.readFile(
+									`${GAMEDATA_PATH}/zh_CN/gamedata/excel/skill_table.json`
+								)
+							).toString()
+						) as RawSkillTable
+					)[rawCharSkill.skillId]
+				}
+
 				const iconId = rawSkillData.iconId || rawSkillData.skillId
 				const isGenericSkill = iconId.match(GenericSkillRegex) !== null
 
