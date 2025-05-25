@@ -11,6 +11,7 @@
 
 	"jobs": {
 		"build": {
+			"name": "Build site",
 			"runs-on": "ubuntu-latest",
 			"steps": [
 				{
@@ -22,7 +23,7 @@
 					"name": "Setup Node",
 					"uses": "actions/setup-node@v4",
 					"with": {
-						"node-version": 21
+						"node-version": 24
 					}
 				},
 
@@ -47,6 +48,8 @@
 		},
 
 		"deploy": {
+			"name": "Deploy site",
+			"needs": "build",
 			"runs-on": "ubuntu-latest",
 
 			"permissions": {
