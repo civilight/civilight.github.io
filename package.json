@@ -1,0 +1,26 @@
+{
+	"name": "civilight",
+	"version": "0.1.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build"
+	},
+	"devDependencies": {
+		"prettier": "3.5.3",
+		"prettier-plugin-svelte": "3.4.0",
+		"prettier-plugin-tailwindcss": "0.6.11"
+	},
+	"dependencies": {
+		"@sveltejs/adapter-static": "3.0.8",
+		"@sveltejs/kit": "2.21.1",
+		"@sveltejs/vite-plugin-svelte": "5.0.3",
+		"@tailwindcss/typography": "0.5.16",
+		"@tailwindcss/vite": "4.1.7",
+		"svelte": "5.33.2",
+		"tailwindcss": "4.1.7",
+		"typescript": "5.8.3",
+		"vite": "6.3.5",
+		"zod": "3.25.28"
+	}
+}

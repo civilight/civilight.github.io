@@ -1,0 +1,29 @@
+# Yes this entire config file is solely to spam prettier
+
+[[language]]
+name = "json"
+formatter = { command = "prettier", args = ["--parser", "json"] }
+
+[[language]]
+name = "html"
+formatter = { command = "prettier", args = ["--parser", "html"] }
+
+[[language]]
+name = "svelte"
+formatter = { command = "prettier", args = ["--parser", "svelte"] }
+language-servers = ["tailwindcss-language-server", "svelteserver"]
+
+[[language]]
+name = "typescript"
+formatter = { command = "prettier", args = ["--parser", "typescript"] }
+
+[[language]]
+name = "javascript"
+formatter = { command = "prettier", args = ["--parser", "typescript"] }
+
+[[language]]
+name = "css"
+formatter = { command = "prettier", args = ["--parser", "css"] }
+
+[language-server.tailwindcss-language-server]
+command = "tailwindcss-language-server"
