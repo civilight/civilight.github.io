@@ -6,6 +6,10 @@
 			"branches": ["master"]
 		},
 
+		"schedule": [{
+			"cron": "41 0/4 * * *" # Every 4 hours on minute 41
+		}],
+
 		"workflow_dispatch": {}
 	},
 
