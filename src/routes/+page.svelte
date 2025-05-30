@@ -2,6 +2,10 @@
 	import { base } from "$app/paths"
 </script>
 
+<svelte:head>
+	<title>Civilight</title>
+</svelte:head>
+
 <main class="prose">
 	<h1>Hello</h1>
 

@@ -6,6 +6,10 @@
 	let { data }: PageProps = $props()
 </script>
 
+<svelte:head>
+	<title>MSR</title>
+</svelte:head>
+
 <main class="h-sceen grid w-screen grid-cols-4 gap-2 p-2 md:grid-cols-6">
 	{#each data.data as album}
 		<a

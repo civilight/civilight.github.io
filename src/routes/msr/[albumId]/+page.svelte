@@ -4,6 +4,10 @@
 	const { data }: PageProps = $props()
 </script>
 
+<svelte:head>
+	<title>{data.name}</title>
+</svelte:head>
+
 <main class="m-auto max-w-xl p-2">
 	<h1 class="text-2xl font-bold">{data.name}</h1>
 	<h3 class="mb-5 text-xl">{data.intro}</h3>
